@@ -1,0 +1,4 @@
+package: gitlab.xunlei.cn/pub/xgoin
+import:
+- package: golang.org/x/tour
+  version: master
