@@ -1,8 +1,0 @@
-hash: 20b15b6f8328b383f6057db7daed46d92394ae001450628f124933b7f69cd445
-updated: 2018-03-26T20:51:23.036235098+08:00
-imports:
-- name: golang.org/x/tour
-  version: daf29d8a377475fc0e139bcc58713575d6d3e0f2
-  subpackages:
-  - tree
-testImports: []
