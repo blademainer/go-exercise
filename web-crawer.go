@@ -10,6 +10,7 @@ import (
 	"strings"
 	"os"
 	"hash/fnv"
+	"strconv"
 )
 
 type Fetcher interface {
@@ -20,7 +21,7 @@ type Fetcher interface {
 
 // Crawl uses fetcher to recursively crawl
 // pages starting with url, to a maximum of depth.
-func Crawl(url string, depth int, fetcher Fetcher) {
+func Crawl(url string, depth int, fetcher OurFetcher) {
 	// TODO: Fetch URLs in parallel.
 	// TODO: Don't fetch the same URL twice.
 	// This implementation doesn't do either:
@@ -43,6 +44,10 @@ func Crawl(url string, depth int, fetcher Fetcher) {
 	fmt.Printf("Found urls: %s by url: %s \n", urls, url)
 	for _, u := range urls {
 		go func(url string) {
+			if fetcher.result[url] != nil{
+				fmt.Printf("Found circulation url: %v \n", url)
+				return
+			}
 			fmt.Printf("depth: %v \n", depth)
 			Crawl(u, depth-1, fetcher)
 			done <- true
@@ -52,6 +57,7 @@ func Crawl(url string, depth int, fetcher Fetcher) {
 	for i, u := range urls {
 		fmt.Printf("<- [%v] %v/%v Waiting for child %v.\n", url, i, len(urls), u)
 		<-done
+		fmt.Println("done.")
 	}
 
 	return
@@ -91,7 +97,7 @@ func (f OurFetcher) Fetch(url string) (string, []string, error) {
 	result := &Result{body: body, urls: urls}
 
 	f.put(url, result)
-	write(url, body)
+	write(url, "")
 
 	return result.body, result.urls, nil
 	//	if res, ok := f.result[url]; ok {
@@ -139,8 +145,17 @@ func FindUrls(string string) []string {
 }
 
 func main() {
+	var url = "http://qq.com"
+	var depth = 4
+	args := os.Args
+	if len(args) >= 3 {
+		url = args[1]
+		i, _ := strconv.Atoi(args[2])
+		depth = i
+	}
+
 	fetcher := OurFetcher{result: make(map[string]*Result)}
-	Crawl("https://baidu.com", 4, fetcher)
+	Crawl(url, depth, fetcher)
 	//time.Sleep(time.Minute)
 }
 
