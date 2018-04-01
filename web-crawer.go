@@ -7,6 +7,9 @@ import (
 	"regexp"
 	"io/ioutil"
 	url2 "net/url"
+	"strings"
+	"os"
+	"hash/fnv"
 )
 
 type Fetcher interface {
@@ -36,17 +39,22 @@ func Crawl(url string, depth int, fetcher Fetcher) {
 		return
 	}
 	//fmt.Printf("found: %s %q\n", url, body)
+	done := make(chan bool)
 	fmt.Printf("Found urls: %s by url: %s \n", urls, url)
 	for _, u := range urls {
-		Crawl(u, depth-1, fetcher)
+		go func(url string) {
+			fmt.Printf("depth: %v \n", depth)
+			Crawl(u, depth-1, fetcher)
+			done <- true
+		}(u)
 	}
-	return
-}
 
-func main() {
-	fetcher := OurFetcher{result: make(map[string]*Result)}
-	Crawl("http://www.qq.com/", 4, fetcher)
-	//time.Sleep(time.Minute)
+	for i, u := range urls {
+		fmt.Printf("<- [%v] %v/%v Waiting for child %v.\n", url, i, len(urls), u)
+		<-done
+	}
+
+	return
 }
 
 // fetcher is Fetcher that returns canned results.
@@ -70,7 +78,7 @@ func (f OurFetcher) Fetch(url string) (string, []string, error) {
 	fmt.Printf("fetch: %s \n", url)
 	resp, err := http.Get(url)
 	if err != nil {
-		fmt.Printf("error: %T. message: %s \n",err.Error(), err.Error())
+		fmt.Printf("error: %T. message: %s \n", err.Error(), err.Error())
 		return "", nil, fmt.Errorf("err: %s. not found url: %s", err.Error(), url)
 	}
 
@@ -83,25 +91,58 @@ func (f OurFetcher) Fetch(url string) (string, []string, error) {
 	result := &Result{body: body, urls: urls}
 
 	f.put(url, result)
+	write(url, body)
 
 	return result.body, result.urls, nil
-//	if res, ok := f.result[url]; ok {
-//	}
-//	return "", nil, fmt.Errorf("not found: %s", url)
+	//	if res, ok := f.result[url]; ok {
+	//	}
+	//	return "", nil, fmt.Errorf("not found: %s", url)
 }
 
+const dir = "html-out"
+
+func hash(s string) uint32 {
+	h := fnv.New32a()
+	h.Write([]byte(s))
+	return h.Sum32()
+}
+
+func write(name string, body string) {
+	_ = os.Mkdir(dir, os.ModePerm)
+	var i uint = 1
+	fmt.Println(string(i))
+
+	path := dir + "/" + strings.Replace(name, "/", "", -1)
+	fmt.Printf("Write %s as path: %s \n", name, path)
+	file, e := os.Create(path)
+	if e != nil {
+		fmt.Println(e)
+	}
+	ioutil.WriteFile(path, []byte(body), os.ModePerm)
+	file.Close()
+}
 
 func FindUrls(string string) []string {
 	compile, e := regexp.Compile("\"http[s]://[\\w\\W]+?\"")
-	if e != nil{
+	if e != nil {
 		panic(e)
 	}
 
 	allString := compile.FindAllString(string, -1)
+	//length := len(allString)
+	//var newUrls [10]string
+	for i, url := range allString {
+		newString := strings.Replace(url, "\"", "", -1)
+		allString[i] = newString
+	}
 	return allString
 }
 
-
+func main() {
+	fetcher := OurFetcher{result: make(map[string]*Result)}
+	Crawl("https://baidu.com", 4, fetcher)
+	//time.Sleep(time.Minute)
+}
 
 //func (f fetcher) Fetch(url string) (string, []string, error) {
 //	if res, ok := f[url]; ok {
