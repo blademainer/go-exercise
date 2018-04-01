@@ -8,25 +8,25 @@ func Init() *List {
 	return list
 }
 
-func insert(entry *Entry, element interface{}) {
+func insertBefore(entry *Entry, element interface{}) {
 	cur := &Entry{entry.pre, entry, element}
 	entry.pre.next = cur
 	entry.pre = cur
 }
 
-func append(entry *Entry, element interface{}) {
+func appendTo(entry *Entry, element interface{}) {
 	cur := &Entry{entry, entry.next, element}
 	entry.next.pre = cur
 	entry.next = cur
 }
 
 func (list *List) Insert(t interface{}) {
-	append(list.Header, t)
+	appendTo(list.Header, t)
 	list.Size ++
 }
 
 func (list *List) Add(t interface{}) {
-	insert(list.Tail, t)
+	insertBefore(list.Tail, t)
 	list.Size ++
 }
 

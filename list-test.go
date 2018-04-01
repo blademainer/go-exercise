@@ -5,17 +5,17 @@ import (
 	"fmt"
 )
 
-func MultiInsert(){
+func MultiInsert() {
 
 }
 
 func main() {
 	list := collection.Init()
-	for i := 0; i < 100000; i++{
+	for i := 0; i < 100000; i++ {
 		list.Add(i)
 	}
-	fmt.Printf("%T \n", list.First())
-	fmt.Println(list.Last())
-	fmt.Println(list.Size)
+	fmt.Printf("First type: [%T]  value: %v \n", list.First(), list.First())
+	fmt.Println("Last: ", list.Last())
+	fmt.Println("Size: ", list.Size)
 
 }

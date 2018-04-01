@@ -1,16 +1,15 @@
 package collection
 
-
 type List struct {
 	Header *Entry
-	Tail *Entry
-	Size int64
+	Tail   *Entry
+	Size   int64
 }
 
 type Entry struct {
-	pre   *Entry;
-	next  *Entry;
-	Value interface{};
+	pre   *Entry
+	next  *Entry
+	Value interface{}
 }
 
 type ListFunc interface {
