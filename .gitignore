@@ -214,6 +214,6 @@ $RECYCLE.BIN/
 *.out
 *.tmp
 html-out
-
+web-crawer
 vendor
 
