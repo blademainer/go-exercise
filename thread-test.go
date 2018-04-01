@@ -2,7 +2,7 @@ package main
 
 import (
 	"fmt"
-	"github.com/go-exercise/util/collection"
+	"./util/collection"
 )
 
 func add(list *collection.List, i chan int) {

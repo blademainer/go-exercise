@@ -1,7 +1,7 @@
 package main
 
 import (
-	"github.com/go-exercise/util/collection"
+	"./util/collection"
 	"fmt"
 )
 
