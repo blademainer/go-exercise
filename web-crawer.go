@@ -11,6 +11,7 @@ import (
 	"os"
 	"hash/fnv"
 	"strconv"
+	"time"
 )
 
 type Fetcher interface {
@@ -44,7 +45,7 @@ func Crawl(url string, depth int, fetcher OurFetcher) {
 	fmt.Printf("Found urls: %s by url: %s \n", urls, url)
 	for _, u := range urls {
 		go func(url string) {
-			if fetcher.result[url] != nil{
+			if fetcher.result[url] != nil {
 				fmt.Printf("Found circulation url: %v \n", url)
 				return
 			}
@@ -80,9 +81,11 @@ func (fetcher OurFetcher) put(url string, result *Result) {
 	fetcher.mutex.Unlock()
 }
 
+var client = &http.Client{Timeout: 10 * time.Second}
+
 func (f OurFetcher) Fetch(url string) (string, []string, error) {
 	fmt.Printf("fetch: %s \n", url)
-	resp, err := http.Get(url)
+	resp, err := client.Get(url)
 	if err != nil {
 		fmt.Printf("error: %T. message: %s \n", err.Error(), err.Error())
 		return "", nil, fmt.Errorf("err: %s. not found url: %s", err.Error(), url)
