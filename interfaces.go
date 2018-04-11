@@ -2,7 +2,7 @@ package main
 
 import "fmt"
 
-type Interface interface {
+type Handler interface {
 	FuncA(params string)
 }
 
@@ -11,18 +11,26 @@ type Channel struct {
 }
 
 
-type AChannel Channel
+type AChannel struct {
+
+}
 
 func (aChannel AChannel) FuncA(params string){
 	fmt.Printf("channe: %s params: %s \n", aChannel, params)
 }
 
-func (c Channel) A(string string){
+
+func Start(handler Handler, channel *Channel) {
+	fmt.Printf("handler: %T channel: %T \n", handler, channel)
+	s := channel.channel
+	handler.FuncA(s)
 
 }
 
 func main() {
-	channel := AChannel{channel: "asd"}
-	channel.FuncA("pppp")
+	channel := &AChannel{}
+	fmt.Printf("AChannel type: %T, Channel type: %T \n", channel, &Channel{""})
+	//channel.FuncA("pppp")
+	Start(channel, &Channel{""})
 }
 
