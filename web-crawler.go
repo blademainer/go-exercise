@@ -10,8 +10,9 @@ import (
 	"strings"
 	"os"
 	"hash/fnv"
-	"strconv"
 	"time"
+	"log"
+	"gopkg.in/yaml.v2"
 )
 
 type Fetcher interface {
@@ -108,7 +109,7 @@ func (f OurFetcher) Fetch(url string) (string, []string, error) {
 	//	return "", nil, fmt.Errorf("not found: %s", url)
 }
 
-const dir = "html-out"
+var dir = "html-out"
 
 func hash(s string) uint32 {
 	h := fnv.New32a()
@@ -147,18 +148,44 @@ func FindUrls(string string) []string {
 	return allString
 }
 
-func main() {
-	var url = "http://qq.com"
-	var depth = 4
-	args := os.Args
-	if len(args) >= 3 {
-		url = args[1]
-		i, _ := strconv.Atoi(args[2])
-		depth = i
+type conf struct {
+	StorageDir string `yaml:"storage_dir"`
+	Url string `yaml:"url"`
+	Depth int `yaml:"depth"`
+}
+
+func (c *conf) getConf() *conf {
+
+	yamlFile, err := ioutil.ReadFile("web-crawler.yaml")
+	if err != nil {
+		log.Printf("yamlFile.Get err   #%v ", err)
+	}
+	err = yaml.Unmarshal(yamlFile, c)
+	if err != nil {
+		log.Fatalf("Unmarshal: %v", err)
 	}
 
-	fetcher := OurFetcher{result: make(map[string]*Result)}
-	Crawl(url, depth, fetcher)
+	return c
+}
+
+func main() {
+	c := conf{}
+	conf := c.getConf()
+	fmt.Printf("conf: %s \n", conf)
+	var url = conf.Url
+	var depth = conf.Depth
+	dir = conf.StorageDir
+	//args := os.Args
+	//if len(args) >= 3 {
+	//	url = args[1]
+	//	i, _ := strconv.Atoi(args[2])
+	//	depth = i
+	//}
+
+	for {
+		fetcher := OurFetcher{result: make(map[string]*Result)}
+		Crawl(url, depth, fetcher)
+	}
 	//time.Sleep(time.Minute)
 }
 
