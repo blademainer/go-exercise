@@ -1,9 +1,9 @@
 language: go
 sudo: required
 services:
-  - docker
+- docker
 go:
-  - 1.10.x
+- 1.10.x
 install:
   - go get -v github.com/Masterminds/glide
   - cd $GOPATH/src/github.com/Masterminds/glide && git checkout e73500c735917e39a8b782e0632418ab70250341 && go install && cd -
@@ -16,8 +16,9 @@ cache:
   directories:
   - vendor
 env:
-  - version="v`date  +"%Y%m%d%H%M%s"`"
-  - REPO="hub.xycloud.com/4164/web-crawler:${version}"
+  matrix:
+    - version="v`date  +"%Y%m%d%H%M%s"`"
+    - REPO="hub.xycloud.com/4164/web-crawler:${version}"
   global:
     - COMMIT=${TRAVIS_COMMIT::8}
     - secure: ds93G5aW/jaVOMuN3sq+Tp/BHvTdZ6lWMai0GZXRnAYYAyKfJnbIRSO9BvCd7Ve2sGvrzCd9JPMtvULcY1YU/dXeut+6t/r54YEzOMj2OjHMffk3tmKAUjDIkvTVtuIOkSdRZdTjul7/khxqDOvZ9W2JbCWlq2ODhV+u8sRcvUEnNavO4t+mmORMXboHOva2RTozTFkfLJaDhC6ufXG4SwQP8v8mpSedeXUudU1R1aOnx0kizVORgHdLup0EGyXwALpSdu98caiBxPlq41+yi7HTFdrwi8y6vJyVwq8gippr4ZXscovGQzisGW1RFS/vgNQDGqZD/KEd4S+RFRNCB4NTMN4KjY25vF60XDD83neZWEfBx6OBydHvr5XxBmelik/20+nvY+z7CyIsU5CItD7Ek4gEHZ9/ZbNLtb18VmLH46je2j3xbq59zajGfcUA1PZk4JLAHaGmEGkzKTr5S9sC6Jg0CVLjtZ9NOyS6C99pzMT8zZlFfP3WdWH+w6R4v4IklF+e2nQxisy/c2iKLFyq6LqqGSjehIFNfW9T46uzu2WjE8TjkwlK8ERQacNWBaZLVJQ+0s0ua9BeiT1i82CIPDdksh9U135xiLHbE6gIU/x1uG0/CyM2CYfqyw6l57NiKu7OMVYukkEp+HsxT3a+KNMF4VtG+WNdrGfdDlY=
