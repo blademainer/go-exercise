@@ -1,4 +1,4 @@
-FROM armhf/alpine
+FROM scratch
 ENV WORKDIR /usr/local/galaxy
 COPY . $WORKDIR
 WORKDIR /usr/local/galaxy/
