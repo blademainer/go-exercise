@@ -25,7 +25,6 @@ after_success:
   - export REPO=hub.xycloud.com/4164/web-crawler:${version}
   - echo "REPO ===== $REPO"
   - env
-  - pwd
-  - cd work-dir && docker build -f web-crawler-docker -t $REPO .
+  - docker build -f web-crawler-docker -t $REPO .
   - docker login hub.xycloud.com -u $DOCKER_USER -p $DOCKER_PASS
   - docker push $REPO
