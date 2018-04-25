@@ -27,4 +27,4 @@ after_success:
   - env
   - docker build -f web-crawler-docker -t $REPO .
   - docker login hub.xycloud.com -u $DOCKER_USER -p $DOCKER_PASS
-  - docker push $REPO
+  - sleep 2 && docker push $REPO
