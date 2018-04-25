@@ -25,4 +25,5 @@ after_success:
   - export tag="hub.xycloud.com/4164/web-crawler:${version}"
   - export docker build -f web-crawler-docker -t $tag .
   - docker login hub.xycloud.com -u $DOCKER_USER -p $DOCKER_PASS
+  - echo "tag ===== $tag"
   - docker push $tag
