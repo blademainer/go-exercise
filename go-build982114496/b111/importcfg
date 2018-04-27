@@ -1,0 +1,10 @@
+# import config
+packagefile bytes=/usr/local/go/pkg/linux_amd64/bytes.a
+packagefile errors=/usr/local/go/pkg/linux_amd64/errors.a
+packagefile os=/usr/local/go/pkg/linux_amd64/os.a
+packagefile os/exec=/usr/local/go/pkg/linux_amd64/os/exec.a
+packagefile path/filepath=/usr/local/go/pkg/linux_amd64/path/filepath.a
+packagefile runtime=/usr/local/go/pkg/linux_amd64/runtime.a
+packagefile strconv=/usr/local/go/pkg/linux_amd64/strconv.a
+packagefile strings=/usr/local/go/pkg/linux_amd64/strings.a
+packagefile sync=/usr/local/go/pkg/linux_amd64/sync.a

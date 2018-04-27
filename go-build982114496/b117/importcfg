@@ -1,0 +1,14 @@
+# import config
+importmap github.com/Masterminds/vcs=github.com/Masterminds/glide/vendor/github.com/Masterminds/vcs
+packagefile encoding/xml=/usr/local/go/pkg/linux_amd64/encoding/xml.a
+packagefile fmt=/usr/local/go/pkg/linux_amd64/fmt.a
+packagefile github.com/Masterminds/glide/vendor/github.com/Masterminds/vcs=/tmp/go-build982114496/b036/_pkg_.a
+packagefile go/build=/usr/local/go/pkg/linux_amd64/go/build.a
+packagefile io=/usr/local/go/pkg/linux_amd64/io.a
+packagefile net/http=/usr/local/go/pkg/linux_amd64/net/http.a
+packagefile net/url=/usr/local/go/pkg/linux_amd64/net/url.a
+packagefile os=/usr/local/go/pkg/linux_amd64/os.a
+packagefile os/exec=/usr/local/go/pkg/linux_amd64/os/exec.a
+packagefile path/filepath=/usr/local/go/pkg/linux_amd64/path/filepath.a
+packagefile regexp=/usr/local/go/pkg/linux_amd64/regexp.a
+packagefile strings=/usr/local/go/pkg/linux_amd64/strings.a

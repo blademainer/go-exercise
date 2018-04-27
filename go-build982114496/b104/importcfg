@@ -1,0 +1,11 @@
+# import config
+packagefile bytes=/usr/local/go/pkg/linux_amd64/bytes.a
+packagefile github.com/Masterminds/glide/msg=/tmp/go-build982114496/b034/_pkg_.a
+packagefile go/ast=/usr/local/go/pkg/linux_amd64/go/ast.a
+packagefile go/parser=/usr/local/go/pkg/linux_amd64/go/parser.a
+packagefile go/printer=/usr/local/go/pkg/linux_amd64/go/printer.a
+packagefile go/token=/usr/local/go/pkg/linux_amd64/go/token.a
+packagefile os=/usr/local/go/pkg/linux_amd64/os.a
+packagefile path/filepath=/usr/local/go/pkg/linux_amd64/path/filepath.a
+packagefile strconv=/usr/local/go/pkg/linux_amd64/strconv.a
+packagefile strings=/usr/local/go/pkg/linux_amd64/strings.a

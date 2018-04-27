@@ -1,0 +1,8 @@
+# import config
+packagefile bytes=/usr/local/go/pkg/linux_amd64/bytes.a
+packagefile encoding/json=/usr/local/go/pkg/linux_amd64/encoding/json.a
+packagefile errors=/usr/local/go/pkg/linux_amd64/errors.a
+packagefile fmt=/usr/local/go/pkg/linux_amd64/fmt.a
+packagefile regexp=/usr/local/go/pkg/linux_amd64/regexp.a
+packagefile strconv=/usr/local/go/pkg/linux_amd64/strconv.a
+packagefile strings=/usr/local/go/pkg/linux_amd64/strings.a
