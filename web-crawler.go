@@ -171,7 +171,7 @@ func (c *conf) getConf() *conf {
 func main() {
 	c := conf{}
 	conf := c.getConf()
-	fmt.Printf("conf: %s \n", conf)
+	fmt.Printf("conf: %v \n", *conf)
 	var url = conf.Url
 	var depth = conf.Depth
 	dir = conf.StorageDir
