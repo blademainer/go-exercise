@@ -16,50 +16,19 @@ import (
 	"unicode"
 	"unicode/utf8"
 	"net/url"
+	"errors"
 )
 
-func Marshal(v interface{}) ([]byte, error) {
+func (p *Parser) Marshal(v interface{}) ([]byte, error) {
+	if p.GroupDelimiter == 0 || p.PairDelimiter == 0{
+		return nil, errors.New("GroupDelimiter, PairDelimiter and Tag could'nt be null")
+	}
 	e := &encodeState{}
-	err := e.marshal(v, encOpts{escapeHTML: true, quoted:false})
+	err := e.marshal(v, *p)
 	if err != nil {
 		return nil, err
 	}
 	return e.Bytes(), nil
-}
-
-// HTMLEscape appends to dst the JSON-encoded src with <, >, &, U+2028 and U+2029
-// characters inside string literals changed to \u003c, \u003e, \u0026, \u2028, \u2029
-// so that the JSON will be safe to embed inside HTML <script> tags.
-// For historical reasons, web browsers don't honor standard HTML
-// escaping within <script> tags, so an alternative JSON encoding must
-// be used.
-func HTMLEscape(dst *bytes.Buffer, src []byte) {
-	// The characters can only appear in string literals,
-	// so just scan the string one byte at a time.
-	start := 0
-	for i, c := range src {
-		if c == '<' || c == '>' || c == '&' {
-			if start < i {
-				dst.Write(src[start:i])
-			}
-			dst.WriteString(`\u00`)
-			dst.WriteByte(hex[c>>4])
-			dst.WriteByte(hex[c&0xF])
-			start = i + 1
-		}
-		// Convert U+2028 and U+2029 (E2 80 A8 and E2 80 A9).
-		if c == 0xE2 && i+2 < len(src) && src[i+1] == 0x80 && src[i+2]&^1 == 0xA8 {
-			if start < i {
-				dst.Write(src[start:i])
-			}
-			dst.WriteString(`\u202`)
-			dst.WriteByte(hex[src[i+2]&0xF])
-			start = i + 3
-		}
-	}
-	if start < len(src) {
-		dst.Write(src[start:])
-	}
 }
 
 // An UnsupportedTypeError is returned by Marshal when attempting
@@ -69,7 +38,7 @@ type UnsupportedTypeError struct {
 }
 
 func (e *UnsupportedTypeError) Error() string {
-	return "json: unsupported type: " + e.Type.String()
+	return "unsupported type: " + e.Type.String()
 }
 
 type UnsupportedValueError struct {
@@ -78,7 +47,7 @@ type UnsupportedValueError struct {
 }
 
 func (e *UnsupportedValueError) Error() string {
-	return "json: unsupported value: " + e.Str
+	return "unsupported value: " + e.Str
 }
 
 type MarshalerError struct {
@@ -109,7 +78,7 @@ func newEncodeState() *encodeState {
 	return new(encodeState)
 }
 
-func (e *encodeState) marshal(v interface{}, opts encOpts) (err error) {
+func (e *encodeState) marshal(v interface{}, opts Parser) (err error) {
 	defer func() {
 		if r := recover(); r != nil {
 			if _, ok := r.(runtime.Error); ok {
@@ -147,29 +116,22 @@ func isEmptyValue(v reflect.Value) bool {
 	return false
 }
 
-func (e *encodeState) reflectValue(v reflect.Value, opts encOpts) {
-	valueEncoder(v)(e, v, opts)
+func (e *encodeState) reflectValue(v reflect.Value, p Parser) {
+	p.valueEncoder(v)(e, v, p)
 }
 
-type encOpts struct {
-	// quoted causes primitive fields to be encoded inside JSON strings.
-	quoted bool
-	// escapeHTML causes '<', '>', and '&' to be escaped in JSON strings.
-	escapeHTML bool
-}
-
-type encoderFunc func(e *encodeState, v reflect.Value, opts encOpts)
+type encoderFunc func(e *encodeState, v reflect.Value, opts Parser)
 
 var encoderCache sync.Map // map[reflect.Type]encoderFunc
 
-func valueEncoder(v reflect.Value) encoderFunc {
+func (p *Parser) valueEncoder(v reflect.Value) encoderFunc {
 	if !v.IsValid() {
 		return invalidValueEncoder
 	}
-	return typeEncoder(v.Type())
+	return p.typeEncoder(v.Type())
 }
 
-func typeEncoder(t reflect.Type) encoderFunc {
+func (p *Parser) typeEncoder(t reflect.Type) encoderFunc {
 	if fi, ok := encoderCache.Load(t); ok {
 		return fi.(encoderFunc)
 	}
@@ -183,7 +145,7 @@ func typeEncoder(t reflect.Type) encoderFunc {
 		f  encoderFunc
 	)
 	wg.Add(1)
-	fi, loaded := encoderCache.LoadOrStore(t, encoderFunc(func(e *encodeState, v reflect.Value, opts encOpts) {
+	fi, loaded := encoderCache.LoadOrStore(t, encoderFunc(func(e *encodeState, v reflect.Value, opts Parser) {
 		wg.Wait()
 		f(e, v, opts)
 	}))
@@ -192,7 +154,7 @@ func typeEncoder(t reflect.Type) encoderFunc {
 	}
 
 	// Compute the real encoder and replace the indirect func with it.
-	f = newTypeEncoder(t, true)
+	f = p.newTypeEncoder(t, true)
 	wg.Done()
 	encoderCache.Store(t, f)
 	return f
@@ -205,13 +167,13 @@ var (
 
 // newTypeEncoder constructs an encoderFunc for a type.
 // The returned encoder only checks CanAddr when allowAddr is true.
-func  newTypeEncoder(t reflect.Type, allowAddr bool) encoderFunc {
+func (p *Parser) newTypeEncoder(t reflect.Type, allowAddr bool) encoderFunc {
 	if t.Implements(marshalerType) {
 		return marshalerEncoder
 	}
 	if t.Kind() != reflect.Ptr && allowAddr {
 		if reflect.PtrTo(t).Implements(marshalerType) {
-			return newCondAddrEncoder(addrMarshalerEncoder, newTypeEncoder(t, false))
+			return newCondAddrEncoder(addrMarshalerEncoder, p.newTypeEncoder(t, false))
 		}
 	}
 
@@ -220,7 +182,7 @@ func  newTypeEncoder(t reflect.Type, allowAddr bool) encoderFunc {
 	}
 	if t.Kind() != reflect.Ptr && allowAddr {
 		if reflect.PtrTo(t).Implements(textMarshalerType) {
-			return newCondAddrEncoder(addrTextMarshalerEncoder, newTypeEncoder(t, false))
+			return newCondAddrEncoder(addrTextMarshalerEncoder, p.newTypeEncoder(t, false))
 		}
 	}
 
@@ -240,25 +202,21 @@ func  newTypeEncoder(t reflect.Type, allowAddr bool) encoderFunc {
 	case reflect.Interface:
 		return interfaceEncoder
 	case reflect.Struct:
-		return newStructEncoder(t)
+		return p.newStructEncoder(t)
 	case reflect.Map:
-		return newMapEncoder(t)
-	case reflect.Slice:
-		return newSliceEncoder(t)
-	case reflect.Array:
-		return newArrayEncoder(t)
+		return p.newMapEncoder(t)
 	case reflect.Ptr:
-		return newPtrEncoder(t)
+		return p.newPtrEncoder(t)
 	default:
 		return unsupportedTypeEncoder
 	}
 }
 
-func invalidValueEncoder(e *encodeState, v reflect.Value, _ encOpts) {
+func invalidValueEncoder(e *encodeState, v reflect.Value, _ Parser) {
 	e.WriteString("null")
 }
 
-func marshalerEncoder(e *encodeState, v reflect.Value, opts encOpts) {
+func marshalerEncoder(e *encodeState, v reflect.Value, opts Parser) {
 	if v.Kind() == reflect.Ptr && v.IsNil() {
 		e.WriteString("null")
 		return
@@ -272,7 +230,7 @@ func marshalerEncoder(e *encodeState, v reflect.Value, opts encOpts) {
 	b := []byte(s)
 	//if err == nil {
 	//	// copy JSON into buffer, checking validity.
-	//	err = compact(&e.Buffer, b, opts.escapeHTML)
+	//	err = compact(&e.Buffer, b, opts.Escape)
 	//}
 	if err != nil {
 		e.error(&MarshalerError{v.Type(), err})
@@ -281,7 +239,7 @@ func marshalerEncoder(e *encodeState, v reflect.Value, opts encOpts) {
 	e.Buffer.Write(b)
 }
 
-func addrMarshalerEncoder(e *encodeState, v reflect.Value, _ encOpts) {
+func addrMarshalerEncoder(e *encodeState, v reflect.Value, _ Parser) {
 	va := v.Addr()
 	if va.IsNil() {
 		e.WriteString("null")
@@ -301,7 +259,7 @@ func addrMarshalerEncoder(e *encodeState, v reflect.Value, _ encOpts) {
 	e.Buffer.Write(b)
 }
 
-func textMarshalerEncoder(e *encodeState, v reflect.Value, opts encOpts) {
+func textMarshalerEncoder(e *encodeState, v reflect.Value, opts Parser) {
 	if v.Kind() == reflect.Ptr && v.IsNil() {
 		e.WriteString("null")
 		return
@@ -311,10 +269,10 @@ func textMarshalerEncoder(e *encodeState, v reflect.Value, opts encOpts) {
 	if err != nil {
 		e.error(&MarshalerError{v.Type(), err})
 	}
-	e.stringBytes(b, opts.escapeHTML)
+	e.stringBytes(b, opts.Escape)
 }
 
-func addrTextMarshalerEncoder(e *encodeState, v reflect.Value, opts encOpts) {
+func addrTextMarshalerEncoder(e *encodeState, v reflect.Value, opts Parser) {
 	va := v.Addr()
 	if va.IsNil() {
 		e.WriteString("null")
@@ -325,11 +283,11 @@ func addrTextMarshalerEncoder(e *encodeState, v reflect.Value, opts encOpts) {
 	if err != nil {
 		e.error(&MarshalerError{v.Type(), err})
 	}
-	e.stringBytes(b, opts.escapeHTML)
+	e.stringBytes(b, opts.Escape)
 }
 
-func boolEncoder(e *encodeState, v reflect.Value, opts encOpts) {
-	if opts.quoted {
+func boolEncoder(e *encodeState, v reflect.Value, opts Parser) {
+	if opts.Quoted {
 		e.WriteByte('"')
 	}
 	if v.Bool() {
@@ -337,36 +295,36 @@ func boolEncoder(e *encodeState, v reflect.Value, opts encOpts) {
 	} else {
 		e.WriteString("false")
 	}
-	if opts.quoted {
+	if opts.Quoted {
 		e.WriteByte('"')
 	}
 }
 
-func intEncoder(e *encodeState, v reflect.Value, opts encOpts) {
+func intEncoder(e *encodeState, v reflect.Value, opts Parser) {
 	b := strconv.AppendInt(e.scratch[:0], v.Int(), 10)
-	if opts.quoted {
+	if opts.Quoted {
 		e.WriteByte('"')
 	}
 	e.Write(b)
-	if opts.quoted {
+	if opts.Quoted {
 		e.WriteByte('"')
 	}
 }
 
-func uintEncoder(e *encodeState, v reflect.Value, opts encOpts) {
+func uintEncoder(e *encodeState, v reflect.Value, opts Parser) {
 	b := strconv.AppendUint(e.scratch[:0], v.Uint(), 10)
-	if opts.quoted {
+	if opts.Quoted {
 		e.WriteByte('"')
 	}
 	e.Write(b)
-	if opts.quoted {
+	if opts.Quoted {
 		e.WriteByte('"')
 	}
 }
 
 type floatEncoder int // number of bits
 
-func (bits floatEncoder) encode(e *encodeState, v reflect.Value, opts encOpts) {
+func (bits floatEncoder) encode(e *encodeState, v reflect.Value, opts Parser) {
 	f := v.Float()
 	if math.IsInf(f, 0) || math.IsNaN(f) {
 		e.error(&UnsupportedValueError{v, strconv.FormatFloat(f, 'g', -1, int(bits))})
@@ -396,11 +354,11 @@ func (bits floatEncoder) encode(e *encodeState, v reflect.Value, opts encOpts) {
 		}
 	}
 
-	if opts.quoted {
+	if opts.Quoted {
 		e.WriteByte('"')
 	}
 	e.Write(b)
-	if opts.quoted {
+	if opts.Quoted {
 		e.WriteByte('"')
 	}
 }
@@ -475,7 +433,7 @@ func isValidNumber(s string) bool {
 	return s == ""
 }
 
-func stringEncoder(e *encodeState, v reflect.Value, opts encOpts) {
+func stringEncoder(e *encodeState, v reflect.Value, p Parser) {
 	if v.Type() == numberType {
 		numStr := v.String()
 		// In Go1.5 the empty string encodes to "0", while this is not a valid number literal
@@ -489,18 +447,18 @@ func stringEncoder(e *encodeState, v reflect.Value, opts encOpts) {
 		e.WriteString(numStr)
 		return
 	}
-	if opts.quoted {
-		sb, err := Marshal(v.String())
+	if p.Quoted {
+		sb, err := p.Marshal(v.String())
 		if err != nil {
 			e.error(err)
 		}
-		e.string(string(sb), opts.escapeHTML)
+		e.string(string(sb), p.Escape)
 	} else {
-		e.string(v.String(), opts.escapeHTML)
+		e.string(v.String(), p.Escape)
 	}
 }
 
-func interfaceEncoder(e *encodeState, v reflect.Value, opts encOpts) {
+func interfaceEncoder(e *encodeState, v reflect.Value, opts Parser) {
 	if v.IsNil() {
 		e.WriteString("null")
 		return
@@ -508,7 +466,7 @@ func interfaceEncoder(e *encodeState, v reflect.Value, opts encOpts) {
 	e.reflectValue(v.Elem(), opts)
 }
 
-func unsupportedTypeEncoder(e *encodeState, v reflect.Value, _ encOpts) {
+func unsupportedTypeEncoder(e *encodeState, v reflect.Value, _ Parser) {
 	e.error(&UnsupportedTypeError{v.Type()})
 }
 
@@ -517,7 +475,7 @@ type structEncoder struct {
 	fieldEncs []encoderFunc
 }
 
-func (se *structEncoder) encode(e *encodeState, v reflect.Value, opts encOpts) {
+func (se *structEncoder) encode(e *encodeState, v reflect.Value, opts Parser) {
 	first := true
 	for i, f := range se.fields {
 		fv := fieldByIndex(v, f.index)
@@ -527,23 +485,23 @@ func (se *structEncoder) encode(e *encodeState, v reflect.Value, opts encOpts) {
 		if first {
 			first = false
 		} else {
-			e.WriteByte('&')
+			e.WriteByte(opts.GroupDelimiter)
 		}
-		e.string(f.name, opts.escapeHTML)
-		e.WriteByte('=')
-		opts.quoted = f.quoted
+		e.string(f.name, opts.Escape)
+		e.WriteByte(opts.PairDelimiter)
+		opts.Quoted = f.quoted
 		se.fieldEncs[i](e, fv, opts)
 	}
 }
 
-func newStructEncoder(t reflect.Type) encoderFunc {
-	fields := cachedTypeFields(t)
+func (p *Parser) newStructEncoder(t reflect.Type) encoderFunc {
+	fields := cachedTypeFields(t, *p)
 	se := &structEncoder{
 		fields:    fields,
 		fieldEncs: make([]encoderFunc, len(fields)),
 	}
 	for i, f := range fields {
-		se.fieldEncs[i] = typeEncoder(typeByIndex(t, f.index))
+		se.fieldEncs[i] = p.typeEncoder(typeByIndex(t, f.index))
 	}
 	return se.encode
 }
@@ -552,7 +510,7 @@ type mapEncoder struct {
 	elemEnc encoderFunc
 }
 
-func (me *mapEncoder) encode(e *encodeState, v reflect.Value, opts encOpts) {
+func (me *mapEncoder) encode(e *encodeState, v reflect.Value, opts Parser) {
 	if v.IsNil() {
 		e.WriteString("null")
 		return
@@ -571,15 +529,15 @@ func (me *mapEncoder) encode(e *encodeState, v reflect.Value, opts encOpts) {
 
 	for i, kv := range sv {
 		if i > 0 {
-			e.WriteByte('&')
+			e.WriteByte(opts.GroupDelimiter)
 		}
-		e.string(kv.s, opts.escapeHTML)
-		e.WriteByte('=')
+		e.string(kv.s, opts.Escape)
+		e.WriteByte(opts.PairDelimiter)
 		me.elemEnc(e, v.MapIndex(kv.v), opts)
 	}
 }
 
-func newMapEncoder(t reflect.Type) encoderFunc {
+func (p *Parser) newMapEncoder(t reflect.Type) encoderFunc {
 	switch t.Key().Kind() {
 	case reflect.String,
 		reflect.Int, reflect.Int8, reflect.Int16, reflect.Int32, reflect.Int64,
@@ -589,11 +547,11 @@ func newMapEncoder(t reflect.Type) encoderFunc {
 			return unsupportedTypeEncoder
 		}
 	}
-	me := &mapEncoder{typeEncoder(t.Elem())}
+	me := &mapEncoder{p.typeEncoder(t.Elem())}
 	return me.encode
 }
 
-func encodeByteSlice(e *encodeState, v reflect.Value, _ encOpts) {
+func encodeByteSlice(e *encodeState, v reflect.Value, _ Parser) {
 	if v.IsNil() {
 		e.WriteString("null")
 		return
@@ -615,57 +573,12 @@ func encodeByteSlice(e *encodeState, v reflect.Value, _ encOpts) {
 	e.WriteByte('"')
 }
 
-// sliceEncoder just wraps an arrayEncoder, checking to make sure the value isn't nil.
-type sliceEncoder struct {
-	arrayEnc encoderFunc
-}
-
-func (se *sliceEncoder) encode(e *encodeState, v reflect.Value, opts encOpts) {
-	if v.IsNil() {
-		e.WriteString("null")
-		return
-	}
-	se.arrayEnc(e, v, opts)
-}
-
-func newSliceEncoder(t reflect.Type) encoderFunc {
-	// Byte slices get special treatment; arrays don't.
-	if t.Elem().Kind() == reflect.Uint8 {
-		p := reflect.PtrTo(t.Elem())
-		if !p.Implements(marshalerType) && !p.Implements(textMarshalerType) {
-			return encodeByteSlice
-		}
-	}
-	enc := &sliceEncoder{newArrayEncoder(t)}
-	return enc.encode
-}
-
-type arrayEncoder struct {
-	elemEnc encoderFunc
-}
-
-func (ae *arrayEncoder) encode(e *encodeState, v reflect.Value, opts encOpts) {
-	e.WriteByte('[')
-	n := v.Len()
-	for i := 0; i < n; i++ {
-		if i > 0 {
-			e.WriteByte(',')
-		}
-		ae.elemEnc(e, v.Index(i), opts)
-	}
-	e.WriteByte(']')
-}
-
-func newArrayEncoder(t reflect.Type) encoderFunc {
-	enc := &arrayEncoder{typeEncoder(t.Elem())}
-	return enc.encode
-}
 
 type ptrEncoder struct {
 	elemEnc encoderFunc
 }
 
-func (pe *ptrEncoder) encode(e *encodeState, v reflect.Value, opts encOpts) {
+func (pe *ptrEncoder) encode(e *encodeState, v reflect.Value, opts Parser) {
 	if v.IsNil() {
 		e.WriteString("null")
 		return
@@ -673,8 +586,8 @@ func (pe *ptrEncoder) encode(e *encodeState, v reflect.Value, opts encOpts) {
 	pe.elemEnc(e, v.Elem(), opts)
 }
 
-func newPtrEncoder(t reflect.Type) encoderFunc {
-	enc := &ptrEncoder{typeEncoder(t.Elem())}
+func (p *Parser) newPtrEncoder(t reflect.Type) encoderFunc {
+	enc := &ptrEncoder{p.typeEncoder(t.Elem())}
 	return enc.encode
 }
 
@@ -682,7 +595,7 @@ type condAddrEncoder struct {
 	canAddrEnc, elseEnc encoderFunc
 }
 
-func (ce *condAddrEncoder) encode(e *encodeState, v reflect.Value, opts encOpts) {
+func (ce *condAddrEncoder) encode(e *encodeState, v reflect.Value, opts Parser) {
 	if v.CanAddr() {
 		ce.canAddrEnc(e, v, opts)
 	} else {
@@ -892,7 +805,7 @@ func (x byIndex) Less(i, j int) bool {
 // typeFields returns a list of fields that JSON should recognize for the given type.
 // The algorithm is breadth-first search over the set of structs to include - the top struct
 // and then any reachable anonymous structs.
-func typeFields(t reflect.Type) []field {
+func typeFields(t reflect.Type, p Parser) []field {
 	// Anonymous fields to explore at the current level and the next.
 	current := []field{}
 	next := []field{{typ: t}}
@@ -936,7 +849,7 @@ func typeFields(t reflect.Type) []field {
 					// Ignore unexported non-embedded fields.
 					continue
 				}
-				tag := sf.Tag.Get("form")
+				tag := sf.Tag.Get(p.Tag)
 				if tag == "-" {
 					continue
 				}
@@ -1095,7 +1008,7 @@ var fieldCache struct {
 }
 
 // cachedTypeFields is like typeFields but uses a cache to avoid repeated work.
-func cachedTypeFields(t reflect.Type) []field {
+func cachedTypeFields(t reflect.Type, p Parser) []field {
 	m, _ := fieldCache.value.Load().(map[reflect.Type][]field)
 	f := m[t]
 	if f != nil {
@@ -1104,7 +1017,7 @@ func cachedTypeFields(t reflect.Type) []field {
 
 	// Compute fields without lock.
 	// Might duplicate effort but won't hold other computations back.
-	f = typeFields(t)
+	f = typeFields(t, p)
 	if f == nil {
 		f = []field{}
 	}

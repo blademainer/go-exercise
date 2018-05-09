@@ -7,13 +7,15 @@ import (
 
 func main() {
 	type Person struct {
-		Name string `form:"name"`
 		Age  uint8  `form:"age"`
+		Name string `form:"name"`
 	}
 
-	parser := &field.Parser{}
+	parser := &field.Parser{Tag: "form", Escape: false, GroupDelimiter: '&', PairDelimiter: '='}
 	parser.Tag = "form"
-	person := &Person{"zhangsan", 18}
+	person := &Person{}
+	person.Name = "张三"
+	person.Age = 18
 
 	params := make(map[string][]string)
 	params["name"] = []string{"张三"}
@@ -22,9 +24,9 @@ func main() {
 	parser.Bind(person, params)
 	fmt.Println(person)
 
-	if bytes, e := field.Marshal(person); e == nil {
+	if bytes, e := parser.Marshal(person); e == nil {
 		fmt.Println(string(bytes))
 	} else {
-		fmt.Println(e)
+		fmt.Println("error happend: ", e)
 	}
 }
