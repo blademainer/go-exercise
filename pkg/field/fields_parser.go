@@ -3,9 +3,13 @@ package field
 type (
 	// Parser is the default implementation of the Binder interface.
 	Parser struct{
-		Tag string
-		EscapeHTML bool
+		Tag    string
+		Escape bool
 		Quoted bool
+		// Delimiter between groups. For example: we should convert struct to http form, so this GroupDelimiter is '&' and PairDelimiter is '='
+		GroupDelimiter byte
+		// Delimiter between key and value.
+		PairDelimiter byte
 	}
 
 	// Unmarshaler is the interface used to wrap the UnmarshalParam method.
