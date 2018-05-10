@@ -12,7 +12,8 @@ func main() {
 		Parent *Person `form:"parent"`
 	}
 
-	parser := &field.Parser{Tag: "form", Escape: false, GroupDelimiter: '&', PairDelimiter: '=', Sort:true}
+	parser := field.HTTP_ENCODED_FORM_PARSER
+	parser.Sort = true
 	parser.Tag = "form"
 
 	parent := &Person{}
@@ -28,7 +29,7 @@ func main() {
 	params["name"] = []string{"张三"}
 	params["age"] = []string{"李四"}
 
-	parser.Bind(person, params)
+	parser.Unmarshal(person, params)
 	fmt.Println(person)
 
 	if bytes, e := parser.Marshal(person); e == nil {
