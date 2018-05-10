@@ -10,6 +10,10 @@ type (
 		GroupDelimiter byte
 		// Delimiter between key and value.
 		PairDelimiter byte
+		// Field should sort by field name
+		Sort bool
+		// Ignore fields that value is nil
+		IgnoreNilValueField bool
 	}
 
 	// Unmarshaler is the interface used to wrap the UnmarshalParam method.

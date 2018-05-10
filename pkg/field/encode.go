@@ -99,6 +99,8 @@ func (e *encodeState) error(err error) {
 }
 
 func isEmptyValue(v reflect.Value) bool {
+	fmt.Printf("type: %v isNil? %v \n", v, v.IsNil())
+
 	switch v.Kind() {
 	case reflect.Array, reflect.Map, reflect.Slice, reflect.String:
 		return v.Len() == 0
@@ -479,6 +481,8 @@ func (se *structEncoder) encode(e *encodeState, v reflect.Value, opts Parser) {
 	first := true
 	for i, f := range se.fields {
 		fv := fieldByIndex(v, f.index)
+		isEmpty := isEmptyValue(fv)
+		fmt.Printf("fv: %v")
 		if !fv.IsValid() || f.omitEmpty && isEmptyValue(fv) {
 			continue
 		}
@@ -490,7 +494,8 @@ func (se *structEncoder) encode(e *encodeState, v reflect.Value, opts Parser) {
 		e.string(f.name, opts.Escape)
 		e.WriteByte(opts.PairDelimiter)
 		opts.Quoted = f.quoted
-		se.fieldEncs[i](e, fv, opts)
+		fieldEncoderFunc := se.fieldEncs[i]
+		fieldEncoderFunc(e, fv, opts)
 	}
 }
 
@@ -959,7 +964,9 @@ func typeFields(t reflect.Type, p Parser) []field {
 	}
 
 	fields = out
-	sort.Sort(byIndex(fields))
+	if !p.Sort {
+		sort.Sort(byIndex(fields))
+	}
 
 	return fields
 }
