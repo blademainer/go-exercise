@@ -6,7 +6,7 @@ import (
 	"strconv"
 )
 
-func (b *Parser) Bind(ptr interface{}, data map[string][]string) error {
+func (b *Parser) Unmarshal(ptr interface{}, data map[string][]string) error {
 	typ := reflect.TypeOf(ptr).Elem()
 	val := reflect.ValueOf(ptr).Elem()
 
@@ -27,7 +27,7 @@ func (b *Parser) Bind(ptr interface{}, data map[string][]string) error {
 			inputFieldName = typeField.Name
 			// If tag is nil, we inspect if the field is a struct.
 			if _, ok := bindUnmarshaler(structField); !ok && structFieldKind == reflect.Struct {
-				err := b.Bind(structField.Addr().Interface(), data)
+				err := b.Unmarshal(structField.Addr().Interface(), data)
 				if err != nil {
 					return err
 				}
@@ -132,7 +132,7 @@ func bindUnmarshaler(field reflect.Value) (Unmarshaler, bool) {
 
 func unmarshalFieldNonPtr(value string, field reflect.Value) (bool, error) {
 	if unmarshaler, ok := bindUnmarshaler(field); ok {
-		err := unmarshaler.UnmarshalParam(value)
+		err := unmarshaler.Unmarshal(value)
 		field.Set(reflect.ValueOf(unmarshaler).Elem())
 		return true, err
 	}
