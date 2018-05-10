@@ -7,15 +7,22 @@ import (
 
 func main() {
 	type Person struct {
-		Age  uint8  `form:"age"`
 		Name string `form:"name"`
+		Age  uint8  `form:"age"`
+		Parent *Person `form:"parent"`
 	}
 
-	parser := &field.Parser{Tag: "form", Escape: false, GroupDelimiter: '&', PairDelimiter: '='}
+	parser := &field.Parser{Tag: "form", Escape: false, GroupDelimiter: '&', PairDelimiter: '=', Sort:true}
 	parser.Tag = "form"
+
+	parent := &Person{}
+	parent.Name = "张二"
+	parent.Age = 40
+
 	person := &Person{}
 	person.Name = "张三"
 	person.Age = 18
+	person.Parent = parent
 
 	params := make(map[string][]string)
 	params["name"] = []string{"张三"}
