@@ -20,9 +20,9 @@ type (
 		Sort bool
 		// Ignore fields that value is nil
 		IgnoreNilValueField bool
-		fieldCache          fieldCache
+		fieldCache          *fieldCache
 		// map[reflect.Type]encoderFunc
-		encoderCache sync.Map
+		encoderCache *sync.Map
 	}
 
 	fieldCache struct {
@@ -47,14 +47,14 @@ func (b *Parser) String() string {
 }
 
 var (
-	HTTP_ENCODED_FORM_PARSER = Parser{
+	HTTP_ENCODED_FORM_PARSER = &Parser{
 		Tag:                 "form",
 		Escape:              true,
 		GroupDelimiter:      '&',
 		PairDelimiter:       '=',
 		Sort:                false,
 		IgnoreNilValueField: true}
-	HTTP_FORM_PARSER = Parser{
+	HTTP_FORM_PARSER = &Parser{
 		Tag:                 "form",
 		Escape:              false,
 		GroupDelimiter:      '&',
