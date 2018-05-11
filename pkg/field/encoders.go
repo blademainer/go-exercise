@@ -14,11 +14,11 @@ import (
 	"encoding"
 )
 
-func invalidValueEncoder(e *encodeState, v reflect.Value, _ Parser) {
+func invalidValueEncoder(e *encodeState, v reflect.Value, _ *Parser) {
 	e.WriteString("null")
 }
 
-func marshalerEncoder(e *encodeState, v reflect.Value, opts Parser) {
+func marshalerEncoder(e *encodeState, v reflect.Value, opts *Parser) {
 	if v.Kind() == reflect.Ptr && v.IsNil() {
 		e.WriteString("null")
 		return
@@ -41,7 +41,7 @@ func marshalerEncoder(e *encodeState, v reflect.Value, opts Parser) {
 	e.Buffer.Write(b)
 }
 
-func addrMarshalerEncoder(e *encodeState, v reflect.Value, _ Parser) {
+func addrMarshalerEncoder(e *encodeState, v reflect.Value, _ *Parser) {
 	va := v.Addr()
 	if va.IsNil() {
 		e.WriteString("null")
@@ -61,7 +61,7 @@ func addrMarshalerEncoder(e *encodeState, v reflect.Value, _ Parser) {
 	e.Buffer.Write(b)
 }
 
-func textMarshalerEncoder(e *encodeState, v reflect.Value, opts Parser) {
+func textMarshalerEncoder(e *encodeState, v reflect.Value, opts *Parser) {
 	if v.Kind() == reflect.Ptr && v.IsNil() {
 		e.WriteString("null")
 		return
@@ -74,7 +74,7 @@ func textMarshalerEncoder(e *encodeState, v reflect.Value, opts Parser) {
 	e.stringBytes(b, opts.Escape)
 }
 
-func addrTextMarshalerEncoder(e *encodeState, v reflect.Value, opts Parser) {
+func addrTextMarshalerEncoder(e *encodeState, v reflect.Value, opts *Parser) {
 	va := v.Addr()
 	if va.IsNil() {
 		e.WriteString("null")
@@ -88,7 +88,7 @@ func addrTextMarshalerEncoder(e *encodeState, v reflect.Value, opts Parser) {
 	e.stringBytes(b, opts.Escape)
 }
 
-func boolEncoder(e *encodeState, v reflect.Value, opts Parser) {
+func boolEncoder(e *encodeState, v reflect.Value, opts *Parser) {
 	if opts.Quoted {
 		e.WriteByte('"')
 	}
@@ -102,7 +102,7 @@ func boolEncoder(e *encodeState, v reflect.Value, opts Parser) {
 	}
 }
 
-func intEncoder(e *encodeState, v reflect.Value, opts Parser) {
+func intEncoder(e *encodeState, v reflect.Value, opts *Parser) {
 	b := strconv.AppendInt(e.scratch[:0], v.Int(), 10)
 	if opts.Quoted {
 		e.WriteByte('"')
@@ -113,7 +113,7 @@ func intEncoder(e *encodeState, v reflect.Value, opts Parser) {
 	}
 }
 
-func uintEncoder(e *encodeState, v reflect.Value, opts Parser) {
+func uintEncoder(e *encodeState, v reflect.Value, opts *Parser) {
 	b := strconv.AppendUint(e.scratch[:0], v.Uint(), 10)
 	if opts.Quoted {
 		e.WriteByte('"')
@@ -126,7 +126,7 @@ func uintEncoder(e *encodeState, v reflect.Value, opts Parser) {
 
 type floatEncoder int // number of bits
 
-func (bits floatEncoder) encode(e *encodeState, v reflect.Value, opts Parser) {
+func (bits floatEncoder) encode(e *encodeState, v reflect.Value, opts *Parser) {
 	f := v.Float()
 	if math.IsInf(f, 0) || math.IsNaN(f) {
 		e.error(&UnsupportedValueError{v, strconv.FormatFloat(f, 'g', -1, int(bits))})
@@ -235,7 +235,7 @@ func isValidNumber(s string) bool {
 	return s == ""
 }
 
-func stringEncoder(e *encodeState, v reflect.Value, p Parser) {
+func stringEncoder(e *encodeState, v reflect.Value, p *Parser) {
 	if v.Type() == numberType {
 		numStr := v.String()
 		// In Go1.5 the empty string encodes to "0", while this is not a valid number literal
@@ -260,7 +260,7 @@ func stringEncoder(e *encodeState, v reflect.Value, p Parser) {
 	}
 }
 
-func interfaceEncoder(e *encodeState, v reflect.Value, opts Parser) {
+func interfaceEncoder(e *encodeState, v reflect.Value, opts *Parser) {
 	if v.IsNil() {
 		e.WriteString("null")
 		return
@@ -268,7 +268,7 @@ func interfaceEncoder(e *encodeState, v reflect.Value, opts Parser) {
 	e.reflectValue(v.Elem(), opts)
 }
 
-func unsupportedTypeEncoder(e *encodeState, v reflect.Value, _ Parser) {
+func unsupportedTypeEncoder(e *encodeState, v reflect.Value, _ *Parser) {
 	e.error(&UnsupportedTypeError{v.Type()})
 }
 
@@ -277,7 +277,7 @@ type structEncoder struct {
 	fieldEncs []encoderFunc
 }
 
-func (se *structEncoder) encode(e *encodeState, v reflect.Value, opts Parser) {
+func (se *structEncoder) encode(e *encodeState, v reflect.Value, opts *Parser) {
 	first := true
 	for i, f := range se.fields {
 		fv := fieldByIndex(v, f.index)
@@ -286,10 +286,11 @@ func (se *structEncoder) encode(e *encodeState, v reflect.Value, opts Parser) {
 			if isEmptyValue(fv) {
 				continue
 			}
-
+			// temp value receiver
 			valueState := &encodeState{}
 			fieldEncoderFunc := se.fieldEncs[i]
 			fieldEncoderFunc(valueState, fv, opts)
+			// is value empty？
 			if valueState.Len() == 0 {
 				continue
 			}
@@ -312,7 +313,7 @@ func (se *structEncoder) encode(e *encodeState, v reflect.Value, opts Parser) {
 }
 
 func (p *Parser) newStructEncoder(t reflect.Type) encoderFunc {
-	fields := cachedTypeFields(t, *p)
+	fields := cachedTypeFields(t, p)
 	se := &structEncoder{
 		fields:    fields,
 		fieldEncs: make([]encoderFunc, len(fields)),
@@ -327,7 +328,7 @@ type mapEncoder struct {
 	elemEnc encoderFunc
 }
 
-func (me *mapEncoder) encode(e *encodeState, v reflect.Value, opts Parser) {
+func (me *mapEncoder) encode(e *encodeState, v reflect.Value, opts *Parser) {
 	if v.IsNil() {
 		e.WriteString("null")
 		return
@@ -394,7 +395,7 @@ type ptrEncoder struct {
 	elemEnc encoderFunc
 }
 
-func (pe *ptrEncoder) encode(e *encodeState, v reflect.Value, opts Parser) {
+func (pe *ptrEncoder) encode(e *encodeState, v reflect.Value, opts *Parser) {
 	if v.IsNil() {
 		e.WriteString("null")
 		return
@@ -411,7 +412,7 @@ type condAddrEncoder struct {
 	canAddrEnc, elseEnc encoderFunc
 }
 
-func (ce *condAddrEncoder) encode(e *encodeState, v reflect.Value, opts Parser) {
+func (ce *condAddrEncoder) encode(e *encodeState, v reflect.Value, opts *Parser) {
 	if v.CanAddr() {
 		ce.canAddrEnc(e, v, opts)
 	} else {
@@ -775,11 +776,9 @@ func typeFields(t reflect.Type, p Parser) []field {
 	}
 
 	fields = out
-	fmt.Printf("fields: %v \n", fields)
 	if !p.Sort {
 		sort.Sort(byIndex(fields))
 	}
-	fmt.Printf("parser: %v sort: %v after fields: %v \n", p.String(), p.Sort, fields)
 
 	return fields
 }
@@ -823,30 +822,34 @@ func dominantField(fields []field) (field, bool) {
 }
 
 // cachedTypeFields is like typeFields but uses a cache to avoid repeated work.
-func cachedTypeFields(t reflect.Type, p Parser) []field {
-	fieldCache := p.fieldCache
-	fmt.Println("fieldCache===== ", fieldCache)
-	m, _ := fieldCache.value.Load().(map[reflect.Type][]field)
+func cachedTypeFields(t reflect.Type, p *Parser) []field {
+	if p.fieldCache == nil {
+		fmt.Printf("init field cache... Parser: %v \n", &p)
+		p.fieldCache = &fieldCache{}
+	}
+	m, _ := p.fieldCache.value.Load().(map[reflect.Type][]field)
 	f := m[t]
+	fmt.Println("fieldCache: ", f)
 	if f != nil {
 		return f
 	}
 
 	// Compute fields without lock.
 	// Might duplicate effort but won't hold other computations back.
-	f = typeFields(t, p)
+	f = typeFields(t, *p)
 	if f == nil {
 		f = []field{}
 	}
 
-	fieldCache.mu.Lock()
-	m, _ = fieldCache.value.Load().(map[reflect.Type][]field)
+	p.fieldCache.mu.Lock()
+	m, _ = p.fieldCache.value.Load().(map[reflect.Type][]field)
 	newM := make(map[reflect.Type][]field, len(m)+1)
 	for k, v := range m {
 		newM[k] = v
 	}
 	newM[t] = f
-	fieldCache.value.Store(newM)
-	fieldCache.mu.Unlock()
+	p.fieldCache.value.Store(newM)
+	p.fieldCache.mu.Unlock()
+	fmt.Println("stored: ", newM)
 	return f
 }

@@ -84,9 +84,9 @@ func TestSort(t *testing.T) {
 }
 
 func Benchmark(b *testing.B) {
-	parser := HTTP_FORM_PARSER
+	p := HTTP_ENCODED_FORM_PARSER
 	person := &Person{Age: 18, Name: "张三"}
 	for i := 0; i < b.N; i++ {
-		parser.Marshal(person)
+		p.Marshal(person)
 	}
 }

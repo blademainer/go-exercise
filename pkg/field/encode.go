@@ -14,7 +14,7 @@ func (p *Parser) Marshal(v interface{}) ([]byte, error) {
 		return nil, errors.New("GroupDelimiter, PairDelimiter and Tag could'nt be null")
 	}
 	e := &encodeState{}
-	err := e.marshal(v, *p)
+	err := e.marshal(v, p)
 	if err != nil {
 		return nil, err
 	}
@@ -68,7 +68,7 @@ func newEncodeState() *encodeState {
 	return new(encodeState)
 }
 
-func (e *encodeState) marshal(v interface{}, opts Parser) (err error) {
+func (e *encodeState) marshal(v interface{}, opts *Parser) (err error) {
 	defer func() {
 		if r := recover(); r != nil {
 			if _, ok := r.(runtime.Error); ok {
@@ -106,11 +106,11 @@ func isEmptyValue(v reflect.Value) bool {
 	return false
 }
 
-func (e *encodeState) reflectValue(v reflect.Value, p Parser) {
+func (e *encodeState) reflectValue(v reflect.Value, p *Parser) {
 	p.valueEncoder(v)(e, v, p)
 }
 
-type encoderFunc func(e *encodeState, v reflect.Value, opts Parser)
+type encoderFunc func(e *encodeState, v reflect.Value, opts *Parser)
 
 func (p *Parser) valueEncoder(v reflect.Value) encoderFunc {
 	if !v.IsValid() {
@@ -120,8 +120,10 @@ func (p *Parser) valueEncoder(v reflect.Value) encoderFunc {
 }
 
 func (p *Parser) typeEncoder(t reflect.Type) encoderFunc {
-	encoderCache := p.encoderCache
-	if fi, ok := encoderCache.Load(t); ok {
+	if p.encoderCache == nil{
+		p.encoderCache = &sync.Map{}
+	}
+	if fi, ok := p.encoderCache.Load(t); ok {
 		return fi.(encoderFunc)
 	}
 
@@ -134,7 +136,7 @@ func (p *Parser) typeEncoder(t reflect.Type) encoderFunc {
 		f  encoderFunc
 	)
 	wg.Add(1)
-	fi, loaded := encoderCache.LoadOrStore(t, encoderFunc(func(e *encodeState, v reflect.Value, opts Parser) {
+	fi, loaded := p.encoderCache.LoadOrStore(t, encoderFunc(func(e *encodeState, v reflect.Value, opts *Parser) {
 		wg.Wait()
 		f(e, v, opts)
 	}))
@@ -145,7 +147,7 @@ func (p *Parser) typeEncoder(t reflect.Type) encoderFunc {
 	// Compute the real encoder and replace the indirect func with it.
 	f = p.newTypeEncoder(t, true)
 	wg.Done()
-	encoderCache.Store(t, f)
+	p.encoderCache.Store(t, f)
 	return f
 }
 
