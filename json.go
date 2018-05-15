@@ -6,11 +6,11 @@ import (
 )
 
 type Student struct {
-	Age uint `json:"age"`
+	Age  uint   `json:"age"`
 	Name string `json:"name"`
 }
 
-func (student *Student) String() string{
+func (student *Student) String() string {
 	bytes, _ := json.Marshal(student)
 	return string(bytes)
 }

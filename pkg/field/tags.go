@@ -1,6 +1,5 @@
 package field
 
-
 import (
 	"strings"
 )
@@ -15,7 +14,6 @@ func parseTag(tag string) (string, tagOptions) {
 	}
 	return tag, tagOptions("")
 }
-
 
 // Contains reports whether a comma-separated list of options
 // contains a particular substr flag. substr must be surrounded by a

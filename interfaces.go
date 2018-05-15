@@ -10,15 +10,12 @@ type Channel struct {
 	channel string
 }
 
-
 type AChannel struct {
-
 }
 
-func (aChannel AChannel) FuncA(params string){
+func (aChannel AChannel) FuncA(params string) {
 	fmt.Printf("channe: %s params: %s \n", aChannel, params)
 }
-
 
 func Start(handler Handler, channel *Channel) {
 	fmt.Printf("handler: %T channel: %T \n", handler, channel)
@@ -33,4 +30,3 @@ func main() {
 	//channel.FuncA("pppp")
 	Start(channel, &Channel{""})
 }
-

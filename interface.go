@@ -8,6 +8,7 @@ type I interface {
 type T struct {
 	name string
 }
+
 func (t T) M() string {
 	return t.name
 }

@@ -1,8 +1,8 @@
 package field
 
 import (
-	"reflect"
 	"errors"
+	"reflect"
 	"strconv"
 )
 

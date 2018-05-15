@@ -1,9 +1,9 @@
 package main
 
 import (
-	"os"
-	"io/ioutil"
 	"fmt"
+	"io/ioutil"
+	"os"
 )
 
 func main() {
@@ -11,9 +11,9 @@ func main() {
 	name := "test.tmp"
 	body := "hello!"
 	_ = os.Mkdir(dir, os.ModePerm)
-	path := dir+"/"+name
+	path := dir + "/" + name
 	file, e := os.Create(path)
-	if e != nil{
+	if e != nil {
 		fmt.Println(e)
 	}
 	err := ioutil.WriteFile(path, []byte(body), 777)

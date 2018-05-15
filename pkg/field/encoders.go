@@ -1,17 +1,17 @@
 package field
 
 import (
-	"reflect"
-	"strings"
-	"sort"
+	"encoding"
 	"encoding/base64"
 	"fmt"
 	"math"
+	"net/url"
+	"reflect"
+	"sort"
 	"strconv"
+	"strings"
 	"unicode"
 	"unicode/utf8"
-	"net/url"
-	"encoding"
 )
 
 func invalidValueEncoder(e *encodeState, v reflect.Value, _ *Parser) {

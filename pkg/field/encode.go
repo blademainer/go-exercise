@@ -1,16 +1,16 @@
 package field
 
 import (
-	"reflect"
 	"bytes"
-	"sync"
 	"encoding"
 	"errors"
+	"reflect"
 	"runtime"
+	"sync"
 )
 
 func (p *Parser) Marshal(v interface{}) ([]byte, error) {
-	if p.GroupDelimiter == 0 || p.PairDelimiter == 0{
+	if p.GroupDelimiter == 0 || p.PairDelimiter == 0 {
 		return nil, errors.New("GroupDelimiter, PairDelimiter and Tag could'nt be null")
 	}
 	e := &encodeState{}
@@ -54,7 +54,7 @@ var hex = "0123456789abcdef"
 // An encodeState encodes JSON into a bytes.Buffer.
 type encodeState struct {
 	bytes.Buffer // accumulated output
-	scratch [64]byte
+	scratch      [64]byte
 }
 
 var encodeStatePool sync.Pool
@@ -120,7 +120,7 @@ func (p *Parser) valueEncoder(v reflect.Value) encoderFunc {
 }
 
 func (p *Parser) typeEncoder(t reflect.Type) encoderFunc {
-	if p.encoderCache == nil{
+	if p.encoderCache == nil {
 		p.encoderCache = &sync.Map{}
 	}
 	if fi, ok := p.encoderCache.Load(t); ok {
@@ -202,4 +202,3 @@ func (p *Parser) newTypeEncoder(t reflect.Type, allowAddr bool) encoderFunc {
 		return unsupportedTypeEncoder
 	}
 }
-

@@ -1,10 +1,10 @@
 package field
 
 import (
-	"testing"
 	"fmt"
 	"github.com/coreos/etcd/pkg/testutil"
 	"strings"
+	"testing"
 )
 
 type Person struct {
