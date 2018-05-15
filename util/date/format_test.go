@@ -1,8 +1,8 @@
 package date
 
 import (
-	"testing"
 	"fmt"
+	"testing"
 )
 
 func TestFormat(t *testing.T) {

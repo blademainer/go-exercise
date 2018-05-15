@@ -1,8 +1,8 @@
 package main
 
 import (
-	"fmt"
 	"./util/collection"
+	"fmt"
 )
 
 func add(list *collection.List, i chan int) {

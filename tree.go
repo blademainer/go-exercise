@@ -1,8 +1,8 @@
 package main
 
 import (
-	"golang.org/x/tour/tree"
 	"fmt"
+	"golang.org/x/tour/tree"
 )
 
 func walkImpl(t *tree.Tree, ch chan int) {

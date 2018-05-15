@@ -11,7 +11,7 @@ type State struct {
 }
 
 func main() {
-	s :=  &State{}
+	s := &State{}
 	s.WriteByte('a')
 	fmt.Println(string(s.Bytes()))
 }

@@ -2,17 +2,17 @@ package main
 
 import (
 	"fmt"
-	"net/http"
-	"sync"
-	"regexp"
-	"io/ioutil"
-	url2 "net/url"
-	"strings"
-	"os"
-	"hash/fnv"
-	"time"
-	"log"
 	"gopkg.in/yaml.v2"
+	"hash/fnv"
+	"io/ioutil"
+	"log"
+	"net/http"
+	url2 "net/url"
+	"os"
+	"regexp"
+	"strings"
+	"sync"
+	"time"
 )
 
 type Fetcher interface {
@@ -150,8 +150,8 @@ func FindUrls(string string) []string {
 
 type conf struct {
 	StorageDir string `yaml:"storage_dir"`
-	Url string `yaml:"url"`
-	Depth int `yaml:"depth"`
+	Url        string `yaml:"url"`
+	Depth      int    `yaml:"depth"`
 }
 
 func (c *conf) getConf() *conf {

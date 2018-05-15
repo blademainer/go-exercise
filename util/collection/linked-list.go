@@ -22,12 +22,12 @@ func appendTo(entry *Entry, element interface{}) {
 
 func (list *List) Insert(t interface{}) {
 	appendTo(list.Header, t)
-	list.Size ++
+	list.Size++
 }
 
 func (list *List) Add(t interface{}) {
 	insertBefore(list.Tail, t)
-	list.Size ++
+	list.Size++
 }
 
 func (list *List) First() interface{} {

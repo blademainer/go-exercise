@@ -2,8 +2,8 @@ package field
 
 import (
 	"fmt"
-	"sync/atomic"
 	"sync"
+	"sync/atomic"
 )
 
 type (

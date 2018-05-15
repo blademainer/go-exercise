@@ -1,10 +1,10 @@
 package main
 
 import (
-	"reflect"
-	"fmt"
-	"encoding/json"
 	"bytes"
+	"encoding/json"
+	"fmt"
+	"reflect"
 	"strconv"
 )
 
@@ -43,7 +43,7 @@ func main() {
 // An encodeState encodes JSON into a bytes.Buffer.
 type encodeState struct {
 	bytes.Buffer // accumulated output
-	scratch [64]byte
+	scratch      [64]byte
 }
 
 type encoderFunc func(e *encodeState, v reflect.Value)

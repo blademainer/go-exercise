@@ -1,15 +1,15 @@
 package main
 
 import (
+	"encoding/json"
 	"fmt"
 	"github.com/blademainer/go-exercise/pkg/field"
-	"encoding/json"
 )
 
 func main() {
 	type Person struct {
-		Name string `form:"name"`
-		Age  uint8  `form:"age"`
+		Name   string  `form:"name"`
+		Age    uint8   `form:"age"`
 		Parent *Person `form:"parent"`
 	}
 

@@ -2,8 +2,8 @@ package main
 
 import (
 	"fmt"
-	"time"
 	"sync"
+	"time"
 )
 
 func run(f func(), done chan bool) {
@@ -11,9 +11,8 @@ func run(f func(), done chan bool) {
 	done <- true
 }
 
-
 type ThreadPool struct {
-	i int
+	i    int
 	Size int
 	lock sync.Mutex
 }
@@ -30,7 +29,7 @@ func server(threadSize uint8, fs chan func()) {
 	}
 }
 
-func increase(){
+func increase() {
 
 }
 
