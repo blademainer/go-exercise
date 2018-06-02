@@ -8,7 +8,7 @@ cp web-crawler.go web-crawler.yaml web-crawler-docker work-dir/
 cd work-dir
 env GOOS=linux GOARCH=arm go build -o web-crawler web-crawler.go
 version="v`date  +"%Y%m%d%H%M%s"`"
-tag="hub.xycloud.com/4164/web-crawler:${version}"
+tag="hub.xycloud.com/18504/web-crawler:${version}"
 docker build -f web-crawler-docker -t $tag .
 docker push $tag
 cd "$cur_dir"
