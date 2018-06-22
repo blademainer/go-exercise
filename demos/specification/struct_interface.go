@@ -41,6 +41,6 @@ func main() {
 	e2 := newEntityEvent()
 	e2.notify()
 	//ee2 := e2.(*entityEvent) // interface conversion: main.Event is main.entityEvent, not *main.entityEvent
-	ee2 := e2.(entityEvent) // interface conversion: main.Event is main.entityEvent, not *main.entityEvent
+	ee2 := e2.(entityEvent)
 	fmt.Printf("Type: %T \n", ee2)
 }
