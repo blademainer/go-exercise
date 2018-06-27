@@ -52,7 +52,7 @@ func InitHttp2Client() (*http.Client, error) {
 	c := &tls.Config{
 		Certificates: certificates,
 		//ClientAuth:   tls.RequireAndVerifyClientCert,
-		RootCAs:    clientCertPool,
+		RootCAs: clientCertPool,
 		//InsecureSkipVerify:true,
 	}
 	//c := &tls.Config{InsecureSkipVerify: true}
@@ -72,19 +72,42 @@ func InitHttp2Client() (*http.Client, error) {
 func main() {
 
 	if client, e := InitHttp2Client(); e == nil {
-		reader := bytes.NewReader([]byte("hello!"))
-		if resp, err := client.Post("https://localhost:8443/h2", "application/json", reader); err == nil {
-			body := make([]byte, 1024)
-			if n, err2 := resp.Body.Read(body); err2 == nil {
-				fmt.Println(string(body[:n]))
-			} else {
-				fmt.Printf("Error to send data: %s \n", err2.Error())
+		fmt.Println(client)
+		respCh := make(chan []byte, 1)
+
+
+		for i := 0; i < 10000; i++ {
+			go func(response chan []byte) {
+				//fmt.Println("new go func")
+				//response <- []byte("ccc")
+
+				reader := bytes.NewReader([]byte("hello!"))
+				if resp, err := client.Post("https://localhost:8443/h2", "application/json", reader); err == nil {
+					body := make([]byte, 1024)
+					if n, err2 := resp.Body.Read(body); err2 == nil {
+						data := body[:n]
+						//fmt.Println("data: ", string(data))
+						response <- data
+					} else {
+						fmt.Printf("Error to send data: %s \n", err2.Error())
+					}
+					//if not close, may produce memory leak
+					//resp.Body.Close()
+				} else {
+					fmt.Printf("Error to send data: %s \n", err.Error())
+				}
+			}(respCh)
+		}
+
+		for {
+			select {
+			case resp := <-respCh:
+				fmt.Printf("received: %s \n", string(resp))
 			}
-		} else {
-			fmt.Printf("Error to send data: %s \n", err.Error())
 		}
 
 	} else {
 		fmt.Printf("Error to init client: %s \n", e.Error())
 	}
+
 }
