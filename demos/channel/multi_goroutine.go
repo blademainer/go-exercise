@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"sync"
+	"sync/atomic"
 )
 
 func main() {
@@ -21,15 +22,14 @@ func main() {
 		//wg.Done()
 	}()
 
+	count := int32(0)
 	go func() {
 		fmt.Println("Starting...")
 		for {
 			select {
 			case s := <-dataCh:
 				fmt.Printf("Receive i：%v \n", s)
-				//doneCh <- true
-			//default:
-			//	fmt.Println("No data1...")
+				atomic.AddInt32(&count, 1)
 			case <-closeCh:
 				fmt.Printf("Closing...")
 				wg.Done()
@@ -43,9 +43,7 @@ func main() {
 			select {
 			case s := <-dataCh:
 				fmt.Printf("Receive i：%v \n", s)
-				//doneCh <- true
-			//default:
-			//	fmt.Println("No data1...")
+				atomic.AddInt32(&count, 1)
 			case <-closeCh:
 				fmt.Printf("Closing...")
 				wg.Done()
@@ -53,42 +51,10 @@ func main() {
 			}
 		}
 	}()
-	//go func() {
-	//	fmt.Println("Starting...")
-	//	for {
-	//		select {
-	//		case s := <-dataCh:
-	//			fmt.Printf("Receive i：%v \n", s)
-	//			doneCh <- true
-	//		default:
-	//			fmt.Println("No data2...")
-	//			//case <-closeCh:
-	//			//	fmt.Printf( "Closing...")
-	//			//	//wg.Done()
-	//			//	return
-	//		}
-	//	}
-	//}()
-
-	//for i := 0; i < 10000; i++ {
-	//    <-doneCh
-	//}
-	//go func() {
-	//	fmt.Println("Starting...")
-	//	for {
-	//		select {
-	//		case s := <-dataCh:
-	//			fmt.Printf("Receive i：%v \n", s)
-	//		case <-closeCh:
-	//			fmt.Printf( "Closing...")
-	//			wg.Done()
-	//			return
-	//		}
-	//	}
-	//}()
 
 	wg.Wait()
 	close(dataCh)
 	close(closeCh)
+	fmt.Println("count:", count)
 
 }
