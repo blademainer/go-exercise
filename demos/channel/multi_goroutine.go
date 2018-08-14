@@ -10,7 +10,7 @@ func main() {
 	wg := sync.WaitGroup{}
 	wg.Add(2)
 
-	dataCh := make(chan int, 1000)
+	dataCh := make(chan int, 100)
 	closeCh := make(chan bool, 2)
 	//doneCh := make(chan bool, 1024)
 	go func() {
@@ -42,7 +42,7 @@ func main() {
 	go func() {
 		defer wg.Done()
 		defer func() {
-			for len(dataCh) > 0{
+			for len(dataCh) > 0 {
 				fmt.Printf("Read least data: %d \n", <-dataCh)
 				atomic.AddInt32(&count, 1)
 			}
