@@ -34,3 +34,6 @@ compile:
     artifacts:
       paths:
         - mybinary
+
+tags:
+  - docker
