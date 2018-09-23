@@ -220,3 +220,6 @@ vendor
 work-dir
 *.tmp
 vendor
+tmp
+bin
+go-build*go-exercise
