@@ -213,3 +213,8 @@ $RECYCLE.BIN/
 # Output of the go coverage tool, specifically when used with LiteIDE
 *.out
 *.tmp
+html-out
+web-crawler
+vendor
+
+work-dir

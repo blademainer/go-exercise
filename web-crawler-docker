@@ -1,0 +1,6 @@
+FROM scratch
+#FROM armhf/alpine
+ENV WORKDIR /usr/local/galaxy
+COPY . $WORKDIR
+WORKDIR /usr/local/galaxy/
+CMD ["./web-crawler"]
