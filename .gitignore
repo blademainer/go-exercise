@@ -218,3 +218,5 @@ web-crawler
 vendor
 
 work-dir
+*.tmp
+vendor
