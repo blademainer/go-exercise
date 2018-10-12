@@ -4,116 +4,73 @@ import (
 	"crypto/rand"
 	"crypto/rsa"
 	"crypto/x509"
+	"encoding/asn1"
+	"encoding/gob"
 	"encoding/pem"
-	"golang.org/x/crypto/ssh"
-	"io/ioutil"
-	"log"
+	"fmt"
+	"os"
 )
 
 func main() {
-	savePrivateFileTo := "./id_rsa_test_private.pem.tmp"
-	savePublicFileTo := "./id_rsa_test_public.pem.tmp"
-	bitSize := 4096
+	reader := rand.Reader
+	bitSize := 2048
 
-	privateKey, err := generatePrivateKey(bitSize)
-	if err != nil {
-		log.Fatal(err.Error())
-	}
+	key, err := rsa.GenerateKey(reader, bitSize)
+	checkError(err)
 
-	//publicKey, err := generatePublicKey(&privateKey.PublicKey)
-	publicKeyBytes := encodePublicKeyToPEM(&privateKey.PublicKey)
-	if err != nil {
-		log.Fatal(err.Error())
-	}
+	publicKey := key.PublicKey
 
-	privateKeyBytes := encodePrivateKeyToPEM(privateKey)
+	saveGobKey("private.key.tmp", key)
+	savePEMKey("private.pem.tmp", key)
 
-	err = writeKeyToFile(privateKeyBytes, savePrivateFileTo)
-	if err != nil {
-		log.Fatal(err.Error())
-	}
-
-	err = writeKeyToFile([]byte(publicKeyBytes), savePublicFileTo)
-	if err != nil {
-		log.Fatal(err.Error())
-	}
+	saveGobKey("public.key.tmp", publicKey)
+	savePublicPEMKey("public.pem.tmp", publicKey)
 }
 
-// generatePrivateKey creates a RSA Private Key of specified byte size
-func generatePrivateKey(bitSize int) (*rsa.PrivateKey, error) {
-	// Private Key generation
-	privateKey, err := rsa.GenerateKey(rand.Reader, bitSize)
-	if err != nil {
-		return nil, err
-	}
+func saveGobKey(fileName string, key interface{}) {
+	outFile, err := os.Create(fileName)
+	checkError(err)
+	defer outFile.Close()
 
-	// Validate Private Key
-	err = privateKey.Validate()
-	if err != nil {
-		return nil, err
-	}
-
-	log.Println("Private Key generated")
-	return privateKey, nil
+	encoder := gob.NewEncoder(outFile)
+	err = encoder.Encode(key)
+	checkError(err)
 }
 
-// encodePrivateKeyToPEM encodes Private Key from RSA to PEM format
-func encodePrivateKeyToPEM(privateKey *rsa.PrivateKey) []byte {
-	// Get ASN.1 DER format
-	privDER := x509.MarshalPKCS1PrivateKey(privateKey)
+func savePEMKey(fileName string, key *rsa.PrivateKey) {
+	outFile, err := os.Create(fileName)
+	checkError(err)
+	defer outFile.Close()
 
-	// pem.Block
-	privBlock := pem.Block{
-		Type:    "RSA PRIVATE KEY",
-		Headers: nil,
-		Bytes:   privDER,
+	var privateKey = &pem.Block{
+		Type:  "PRIVATE KEY",
+		Bytes: x509.MarshalPKCS1PrivateKey(key),
 	}
 
-	// Private key in PEM format
-	privatePEM := pem.EncodeToMemory(&privBlock)
-
-	return privatePEM
+	err = pem.Encode(outFile, privateKey)
+	checkError(err)
 }
 
-// generatePublicKey take a rsa.PublicKey and return bytes suitable for writing to .pub file
-// returns in the format "ssh-rsa ..."
-func generatePublicKey(privatekey *rsa.PublicKey) ([]byte, error) {
-	publicRsaKey, err := ssh.NewPublicKey(privatekey)
+func savePublicPEMKey(fileName string, pubkey rsa.PublicKey) {
+	asn1Bytes, err := asn1.Marshal(pubkey)
+	checkError(err)
+
+	var pemkey = &pem.Block{
+		Type:  "PUBLIC KEY",
+		Bytes: asn1Bytes,
+	}
+
+	pemfile, err := os.Create(fileName)
+	checkError(err)
+	defer pemfile.Close()
+
+	err = pem.Encode(pemfile, pemkey)
+	checkError(err)
+}
+
+func checkError(err error) {
 	if err != nil {
-		return nil, err
+		fmt.Println("Fatal error ", err.Error())
+		os.Exit(1)
 	}
-
-	pubKeyBytes := ssh.MarshalAuthorizedKey(publicRsaKey)
-
-	log.Println("Public key generated")
-	return pubKeyBytes, nil
-}
-
-// encodePrivateKeyToPEM encodes Private Key from RSA to PEM format
-func encodePublicKeyToPEM(publicKey *rsa.PublicKey) []byte {
-	// Get ASN.1 DER format
-	publicDER := x509.MarshalPKCS1PublicKey(publicKey)
-
-	// pem.Block
-	publicBlock := pem.Block{
-		Type:    "RSA PUBLIC KEY",
-		Headers: nil,
-		Bytes:   publicDER,
-	}
-
-	// Private key in PEM format
-	publicPEM := pem.EncodeToMemory(&publicBlock)
-
-	return publicPEM
-}
-
-// writePemToFile writes keys to a file
-func writeKeyToFile(keyBytes []byte, saveFileTo string) error {
-	err := ioutil.WriteFile(saveFileTo, keyBytes, 0600)
-	if err != nil {
-		return err
-	}
-
-	log.Printf("Key saved to: %s", saveFileTo)
-	return nil
 }
