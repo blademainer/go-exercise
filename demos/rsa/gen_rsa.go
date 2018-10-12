@@ -25,6 +25,7 @@ func main() {
 
 	saveGobKey("public.key.tmp", publicKey)
 	savePublicPEMKey("public.pem.tmp", publicKey)
+	savePublicPKIXKey("public.pkix.pem.tmp", publicKey)
 }
 
 func saveGobKey(fileName string, key interface{}) {
@@ -53,6 +54,23 @@ func savePEMKey(fileName string, key *rsa.PrivateKey) {
 
 func savePublicPEMKey(fileName string, pubkey rsa.PublicKey) {
 	asn1Bytes, err := asn1.Marshal(pubkey)
+	checkError(err)
+
+	var pemkey = &pem.Block{
+		Type:  "PUBLIC KEY",
+		Bytes: asn1Bytes,
+	}
+
+	pemfile, err := os.Create(fileName)
+	checkError(err)
+	defer pemfile.Close()
+
+	err = pem.Encode(pemfile, pemkey)
+	checkError(err)
+}
+
+func savePublicPKIXKey(fileName string, pubkey rsa.PublicKey) {
+	asn1Bytes, err := x509.MarshalPKIXPublicKey(&pubkey)
 	checkError(err)
 
 	var pemkey = &pem.Block{
