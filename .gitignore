@@ -218,6 +218,8 @@ web-crawler
 vendor
 
 work-dir
+*.tmp
+vendor
 tmp
 bin
-go-build*
+go-build*go-exercise
