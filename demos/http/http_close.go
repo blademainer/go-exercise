@@ -30,6 +30,8 @@ func main() {
 	//connections()
 }
 
+
+
 func connections() {
 	lookupProcesses := true
 	cs, err := procspy.Connections(lookupProcesses)
