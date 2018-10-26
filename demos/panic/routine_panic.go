@@ -11,4 +11,5 @@ func main() {
 		panic("aaaa")
 	}()
 	time.Sleep(2 * time.Second)
+	fmt.Println("OK?")
 }
