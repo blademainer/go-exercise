@@ -19,12 +19,12 @@ func or(a, b bool) bool {
 
 // a ^ b
 func xor(a, b bool) bool {
-	return not(or(and(a, b), and(not(a), not(b))))
+	return and(or(a, b), or(not(a), not(b))) // (!a|!b)&(a|b)
 }
 
 func main() {
-	fmt.Println(xor(true, false)) // true
-	fmt.Println(xor(false, true)) // true
-	fmt.Println(xor(true, true)) // false
+	fmt.Println(xor(true, false))  // true
+	fmt.Println(xor(false, true))  // true
+	fmt.Println(xor(true, true))   // false
 	fmt.Println(xor(false, false)) // false
 }
