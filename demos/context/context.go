@@ -3,9 +3,10 @@ package main
 import (
 	"context"
 	"fmt"
-	"time"
 	"sync"
+	"time"
 )
+
 var wg = &sync.WaitGroup{}
 
 func request(context context.Context, data chan int) {
