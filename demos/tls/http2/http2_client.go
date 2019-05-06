@@ -1,14 +1,15 @@
 package main
 
 import (
-	"net/http"
-	"crypto/tls"
-	"golang.org/x/net/http2"
-	"time"
-	"fmt"
-	"crypto/x509"
-	"io/ioutil"
 	"bytes"
+	"crypto/tls"
+	"crypto/x509"
+	"fmt"
+	"golang.org/x/net/http2"
+	"io/ioutil"
+	"net/http"
+	"sync"
+	"time"
 )
 
 type (
@@ -75,9 +76,11 @@ func main() {
 		fmt.Println(client)
 		respCh := make(chan []byte, 1)
 
-
+		wg := sync.WaitGroup{}
 		for i := 0; i < 10000; i++ {
 			go func(response chan []byte) {
+				wg.Add(1)
+				defer wg.Done()
 				//fmt.Println("new go func")
 				//response <- []byte("ccc")
 
@@ -99,13 +102,15 @@ func main() {
 			}(respCh)
 		}
 
-		for {
-			select {
-			case resp := <-respCh:
-				fmt.Printf("received: %s \n", string(resp))
+		go func() {
+			for {
+				select {
+				case resp := <-respCh:
+					fmt.Printf("received: %s \n", string(resp))
+				}
 			}
-		}
-
+		}()
+		wg.Wait()
 	} else {
 		fmt.Printf("Error to init client: %s \n", e.Error())
 	}

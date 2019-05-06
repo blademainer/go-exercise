@@ -10,9 +10,11 @@ github.com/ugorji/go v0.0.0-20180407103000-f3cacc17c85e/go.mod h1:hnLbHMwcvSihnD
 github.com/weaveworks/procspy v0.0.0-20150706124340-cb970aa190c3 h1:UC4iN/yCDCObTBhKzo34/R2U6qptTPmqbzG6UiQVMUQ=
 github.com/weaveworks/procspy v0.0.0-20150706124340-cb970aa190c3/go.mod h1:cJTfuBcxkdbj8Mabk4PPdaf0AXv9TYEJmkFxKcWxYY4=
 golang.org/x/crypto v0.0.0-20181009213950-7c1a557ab941/go.mod h1:6SG95UA2DQfeDnfUPMdvaQW0Q7yPrPDi9nlGo2tz2b4=
+golang.org/x/net v0.0.0-20181023162649-9b4f9f5ad519 h1:x6rhz8Y9CjbgQkccRGmELH6K+LJj7tOoh3XWeC1yaQM=
 golang.org/x/net v0.0.0-20181023162649-9b4f9f5ad519/go.mod h1:mL1N/T3taQHkDXs73rZJwtUhF3w3ftmwwsq0BUmARs4=
 golang.org/x/sync v0.0.0-20180314180146-1d60e4601c6f/go.mod h1:RxMgew5VJxzue5/jJTE5uejpjVlOe/izrB70Jof72aM=
 golang.org/x/sys v0.0.0-20180425194835-bb9c189858d9/go.mod h1:STP8DvDyc/dI5b8T5hshtkjS+E42TnysNCUPdjciGhY=
+golang.org/x/text v0.3.0 h1:g61tztE5qeGQ89tm6NTjjM9VPIm088od1l6aSorWRWg=
 golang.org/x/text v0.3.0/go.mod h1:NqM8EUOU14njkJ3fqMW+pc6Ldnwhi/IjpwHt7yyuwOQ=
 golang.org/x/tour v0.0.0-20180314180224-daf29d8a3774/go.mod h1:Lbf3mfakj6qjmukz+0azQ0h/7VnmeB3MNyEfLwE07Lw=
 gopkg.in/check.v1 v0.0.0-20161208181325-20d25e280405/go.mod h1:Co6ibVJAznAaIkqp8huTwlJQCZ016jof/cbN4VW5Yz0=

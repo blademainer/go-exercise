@@ -1,6 +1,8 @@
 #!/usr/bin/env bash
 openssl genrsa -out ca.key 2048
-openssl req -new -x509 -key ca.key -out ca.crt -subj "/C=CN/ST=GD/L=SZ/O=XL/OU=IT/CN=localhost/emailAddress=blademainer@gmail.com"
+openssl req -new -x509 -key ca.key -days 1095 -out ca.crt -subj "/C=CN/ST=GD/L=SZ/O=XL/OU=IT/CN=localhost/emailAddress=blademainer@gmail.com"
+
+openssl x509 -enddate -noout -in ca.crt
 
 openssl genrsa -out server.pem 2048
 openssl rsa -in server.pem -out server.key
