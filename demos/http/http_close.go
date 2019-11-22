@@ -5,6 +5,7 @@ import (
 	"github.com/weaveworks/procspy"
 	"net/http"
 	"os"
+	"sync"
 	"time"
 )
 
@@ -12,23 +13,35 @@ func main() {
 	getpid := os.Getpid()
 	fmt.Println("Pid: ", getpid)
 
+	wg:=sync.WaitGroup{}
+
 	for i := 0; i < 1000; i++ {
-		resp, err := http.DefaultClient.Get("https://baidu.com")
-		if err != nil {
-			fmt.Println("Error: ", err.Error())
-			return
+		for j := 0; j < 10; j++  {
+			wg.Add(1)
+			go func() {
+				defer wg.Done()
+				resp, err := http.DefaultClient.Get("http://192.168.25.140")
+				if err != nil {
+					fmt.Println("Error: ", err.Error())
+					return
+				}
+				//if bytes, e := ioutil.ReadAll(resp.Body); e != nil {
+				//	fmt.Println("Error: ", e.Error())
+				//} else {
+				//	fmt.Println(len(bytes))
+				//}
+				resp.Body.Close()
+				time.Sleep(100 * time.Second)
+			}()
 		}
-		//if bytes, e := ioutil.ReadAll(resp.Body); e != nil {
-		//	fmt.Println("Error: ", e.Error())
-		//} else {
-		//	fmt.Println(len(bytes))
-		//}
-		resp.Body.Close()
-		time.Sleep(time.Second)
 	}
+
+	wg.Wait()
 
 	//connections()
 }
+
+
 
 func connections() {
 	lookupProcesses := true
