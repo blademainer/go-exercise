@@ -65,14 +65,14 @@ func main() {
 	s2 := &store{kv: make(map[int]int)}
 	wg2 := sync.WaitGroup{}
 	for i := 0; i < 1000; i++ {
-		wg2.Add(1)
+		wg2.Add(100)
 		go func() {
 			for j := 0; j < 100; j++ {
 				k := (i + j) % 10
 				v := k
 				s2.getOrInit(k, v)
+				wg2.Done()
 			}
-			wg2.Done()
 		}()
 	}
 	wg2.Wait()
