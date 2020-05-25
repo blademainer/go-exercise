@@ -225,3 +225,4 @@ bin
 go-build*go-exercise
 *.bin
 go.sum
+*.db
