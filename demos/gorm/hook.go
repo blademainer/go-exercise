@@ -13,18 +13,23 @@ type Person struct {
 	Age  int    `json:"age" gorm:"column:age"`
 }
 
-func (u *Person) BeforeSave() (err error) {
-	fmt.Printf("before creating: %v\n", u)
-	return
-}
-
-func (u *Person) AfterCreate(scope *gorm.Scope) (err error) {
-	fmt.Printf("after create person: %v scope: %v \n", u, scope)
-	return
-}
+//func (u *Person) BeforeSave() (err error) {
+//	fmt.Printf("before creating: %v\n", u)
+//	return
+//}
+//
+//func (u *Person) AfterCreate(scope *gorm.Scope) (err error) {
+//	fmt.Printf("after create person: %v scope: %v \n", u, scope)
+//	return
+//}
 func init() {
 	gorm.DefaultCallback.Create().Before("gorm:before_create").Register("test:create", func(scope *gorm.Scope) {
-		fmt.Printf("callback create, scope.Value: %v, scope.Search: %v, scope.SQL: %v, scope.SQLVars: %v \n", scope.Value, scope.Search, scope.SQL, scope.SQLVars)
+		get, _ := scope.Get(scope.PrimaryKey())
+		//if !b {
+		//	fmt.Println("callback create: no pk")
+		//} else {
+			fmt.Printf("callback create, table: %v, pk: %v, pk: %v scope.Value: %v, scope.Search: %v, scope.SQL: %v, scope.SQLVars: %v \n", scope.TableName(), scope.PrimaryKey(), get, scope.Value, scope.Search, scope.SQL, scope.SQLVars)
+		//}
 	})
 	gorm.DefaultCallback.Update().Register("test:update", func(scope *gorm.Scope) {
 		fmt.Printf("callback update, scope.Value: %v, scope.Search: %v, scope.SQL: %v, scope.SQLVars: %v \n", scope.Value, scope.Search, scope.SQL, scope.SQLVars)
