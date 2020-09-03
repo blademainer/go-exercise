@@ -12,6 +12,7 @@ require (
 	github.com/gin-gonic/gin v0.0.0-20170702092826-d459835d2b07
 	github.com/golang/mock v1.3.1
 	github.com/golang/protobuf v1.4.2
+	github.com/google/wire v0.4.0
 	github.com/grpc-ecosystem/grpc-gateway v1.14.3
 	github.com/inconshreveable/go-update v0.0.0-20160112193335-8152e7eb6ccf // indirect
 	github.com/jinzhu/gorm v1.9.12
