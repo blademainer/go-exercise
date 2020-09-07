@@ -25,6 +25,7 @@ require (
 	golang.org/x/crypto v0.0.0-20191205180655-e7c4368fe9dd
 	golang.org/x/net v0.0.0-20191002035440-2ec189313ef0
 	golang.org/x/sync v0.0.0-20190911185100-cd5d95a43a6e
+	golang.org/x/tools v0.0.0-20190524140312-2c0ae7006135
 	golang.org/x/tour v0.0.0-20180314180224-daf29d8a3774
 	google.golang.org/genproto v0.0.0-20190927181202-20e1ac93f88c
 	google.golang.org/grpc v1.26.0
