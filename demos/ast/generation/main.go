@@ -62,6 +62,21 @@ func main() {
 						fmt.Printf("tspec.Doc %v\n", tspec.Doc)
 						fmt.Printf("tspec.Assign %v\n", tspec.Assign)
 						fmt.Printf("tspec.Type %v\n", tspec.Type)
+						switch tspec.Type.(type) {
+						case *ast.InterfaceType:
+							itype := tspec.Type.(*ast.InterfaceType)
+							for _, field := range itype.Methods.List {
+								fmt.Println("field.Names: ", field.Names)
+								fmt.Println("field.Type: ", field.Type)
+								fmt.Println("field.Tag: ", field.Tag)
+								switch field.Type.(type) {
+								case *ast.FuncType:
+									fType := field.Type.(*ast.FuncType)
+									fmt.Printf("fType.Params.List: %v\n", fType.Params.List)
+									fmt.Printf("fType.Results: %v\n", fType.Results)
+								}
+							}
+						}
 					}
 
 				}
