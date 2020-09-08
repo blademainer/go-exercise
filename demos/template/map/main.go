@@ -1,15 +1,16 @@
 package main
 
 import (
+	"bytes"
 	"fmt"
 	"html/template"
-	"os"
 	"path/filepath"
 	"runtime"
 )
 
 // basepath is the root directory of this package.
 var basepath string
+var tmpl *template.Template
 
 func init() {
 	_, currentFile, _, _ := runtime.Caller(0)
@@ -33,19 +34,37 @@ type Person struct {
 }
 
 func main() {
-	abs := Path("./test.gohtml")
+	Init()
+	execute := Execute()
+	fmt.Println(execute)
+}
 
-	tpl, err := template.
+func Init() {
+	abs := Path("./test.gohtml")
+	var err error
+	tmpl, err = template.
 		New("test.gohtml").
 		Funcs(template.FuncMap{
-			"hello": func() string {
-				return "test func"
+			"multiAge": func(person Person) int {
+				return person.Age * 2
 			},
 		}).
 		ParseFiles(abs)
 	if err != nil {
 		panic(err.Error())
 	}
-	fmt.Println(tpl)
-	tpl.Execute(os.Stdout, Person{"Zhangsan", 11})
+	fmt.Println(tmpl)
+}
+
+func Execute() string {
+	bf := &bytes.Buffer{}
+	data := map[string]interface{}{
+		"person": Person{"Zhangsan", 11},
+		"m": map[string]interface{}{
+			"name": "zhangsan",
+			"age":  11,
+		},
+	}
+	tmpl.Execute(bf, data)
+	return bf.String()
 }
