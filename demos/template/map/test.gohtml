@@ -1,2 +1,3 @@
-Hello {{ .person.Name }} your age: {{ .person.Age }} multiply twice age: {{ multiAge .person }}
-map: {{ .m.age }}
+{{ if eq .person.Name "Zhangsan" }}My dear master! {{ else }} Hello {{ .person.Name }} {{end}}
+your age: {{ .person.Age }} multiply twice age: {{ multiAge .person }}
+map age: {{ if ne .m.age nil }}{{ .m.age }}{{ else }}0{{end}}

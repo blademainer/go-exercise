@@ -1,0 +1,3 @@
+map: {{if .m.age }}{{.m.age}}{{ else }}0{{end}}
+map: {{$illegalField := .m.illegalField}} {{if $illegalField }} {{$illegalField}} {{ else }}0{{end}}
+map: {{$age := .m.age}}{{if $age }}{{$age}}{{ else }}0{{end}}
