@@ -33,6 +33,10 @@ type Person struct {
 	Age  int
 }
 
+func (p Person) Say(admin string) string {
+	return fmt.Sprintf("Hello %v, my name is %v", admin, p.Name)
+}
+
 func main() {
 	// doc: https://golang.org/pkg/text/template/
 	Init()
