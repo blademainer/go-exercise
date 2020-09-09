@@ -75,6 +75,9 @@ func Execute() string {
 
 func ExecuteData(data interface{}) string {
 	bf := &bytes.Buffer{}
-	tmpl.Execute(bf, data)
+	err := tmpl.Execute(bf, data)
+	if err != nil {
+		panic(err.Error())
+	}
 	return bf.String()
 }
