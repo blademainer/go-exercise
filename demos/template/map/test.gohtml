@@ -5,8 +5,8 @@
 {{- end }}
 your age: {{ .person.Age }} multiply twice age: {{ multiAge .person }}
 map age:
-{{- if .m.age -}}
-    {{ .m.age }}
+{{- with .m.age -}}
+    {{ . }}
 {{- else -}}
 0
 {{- end }}
