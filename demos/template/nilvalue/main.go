@@ -29,8 +29,9 @@ func Path(rel string) string {
 }
 
 type Person struct {
-	Name string
-	Age  int
+	Name  string
+	Age   int
+	Inner string
 }
 
 func (p Person) Say(admin string) string {
@@ -63,11 +64,13 @@ func Init() {
 }
 
 func Execute() string {
+	p := Person{Name: "Zhangsan", Age: 11, Inner: "inner"}
 	data := map[string]interface{}{
-		"person": Person{"Zhangsan", 11},
+		"person": p,
 		"m": map[string]interface{}{
 			"name": "zhangsan",
 			"age":  11,
+			"say": p.Say,
 		},
 	}
 	return ExecuteData(data)
