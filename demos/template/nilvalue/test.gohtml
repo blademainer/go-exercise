@@ -6,3 +6,4 @@ say: {{ .person.Say "Master" }}
 {{$x := "output" }}{{ .person.Say $x }}
 {{with $y := "output" }}{{ . }}{{end}}
 {{$x = printf $x "append"}} {{ . }}
+{{ call .m.say "Master" }}
