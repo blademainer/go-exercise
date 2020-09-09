@@ -33,6 +33,10 @@ type Person struct {
 	Age  int
 }
 
+func (p Person) Say() string {
+	return fmt.Sprintf("Hello, my name is %v", p.Name)
+}
+
 func main() {
 	// doc: https://golang.org/pkg/text/template/
 	Init()
@@ -70,6 +74,9 @@ func Execute() string {
 
 func ExecuteData(data interface{}) string {
 	bf := &bytes.Buffer{}
-	tmpl.Execute(bf, data)
+	err := tmpl.Execute(bf, data)
+	if err != nil {
+		panic(err.Error())
+	}
 	return bf.String()
 }

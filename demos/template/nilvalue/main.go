@@ -50,6 +50,7 @@ func Init() {
 				return person.Age * 2
 			},
 		}).
+		Option("missingkey=default").
 		ParseFiles(abs)
 	if err != nil {
 		panic(err.Error())

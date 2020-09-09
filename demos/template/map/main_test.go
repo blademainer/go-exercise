@@ -30,23 +30,25 @@ func TestExecuteData(t *testing.T) {
 					},
 				},
 			},
-			want: `My dear master! 
+			want: `My dear master!
 your age: 11 multiply twice age: 22
-map age: 11`,
+map age:11
+Say: Hello, my name is Zhangsan`,
 		},
 		{
 			name: "t2",
 			args: args{
 				data: map[string]interface{}{
-					"person": Person{"Zhangsan", 11},
+					"person": Person{"Wangwu", 11},
 					"m": map[string]interface{}{
-						"name": "zhangsan",
+						"name": "wangwu",
 					},
 				},
 			},
-			want: `My dear master! 
+			want: `Hello Wangwu
 your age: 11 multiply twice age: 22
-map age: 0`,
+map age:0
+Say: Hello, my name is Wangwu`,
 		},
 	}
 	for _, tt := range tests {
