@@ -7,12 +7,31 @@ import (
 	"go/token"
 	"golang.org/x/tools/go/packages"
 	"log"
-	"reflect"
 	"strings"
 )
 
+type AF func()
+
+// A demo type
 type A interface {
-	Hello()
+	Hello(name string) (A, error)
+	HelloF(name string) (AF, error)
+	Marshal(interface{}) ([][]byte, error)
+}
+
+type B struct {
+}
+
+func (b B) Hello(name string) (A, error) {
+	panic("implement me")
+}
+
+func (b B) HelloF(name string) (AF, error) {
+	panic("implement me")
+}
+
+func (b B) Marshal(i interface{}) ([][]byte, error) {
+	panic("implement me")
 }
 
 func main() {
@@ -31,7 +50,7 @@ func main() {
 		Tests:      false,
 		BuildFlags: []string{fmt.Sprintf("-tags=%s", strings.Join([]string{}, " "))},
 	}
-	pkgs, err := packages.Load(cfg, "github.com/blademainer/go-exercise/demos/ast/generation")
+	pkgs, err := packages.Load(cfg, "./demos/ast/generation")
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -46,7 +65,7 @@ func main() {
 	fmt.Println("pkg.Types: ", pkg.Types)
 	for _, file := range pkg.Syntax {
 		ast.Inspect(file, func(node ast.Node) bool {
-			fmt.Printf("type: %v node: %v\n", reflect.TypeOf(node), node)
+			//fmt.Printf("type: %v node: %v\n", reflect.TypeOf(node), node)
 			switch node.(type) {
 			case *ast.GenDecl:
 				decl := node.(*ast.GenDecl)
@@ -57,9 +76,12 @@ func main() {
 					fmt.Printf("token: %v \n", decl)
 					for _, spec := range decl.Specs {
 						tspec := spec.(*ast.TypeSpec) // Guaranteed to succeed as this is CONST.
-						fmt.Printf("tspec.name %v\n", tspec.Name)
-						fmt.Printf("tspec.Comment %v\n", tspec.Comment)
-						fmt.Printf("tspec.Doc %v\n", tspec.Doc)
+						if tspec.Name.Name != "A" && tspec.Name.Name != "B" {
+							continue
+						}
+						fmt.Printf("tspec.name %#v\n", tspec.Name)
+						fmt.Printf("tspec.Comment %#v\n", tspec.Comment)
+						fmt.Printf("tspec.Doc %#v\n", tspec.Doc)
 						fmt.Printf("tspec.Assign %v\n", tspec.Assign)
 						fmt.Printf("tspec.Type %v\n", tspec.Type)
 						switch tspec.Type.(type) {
@@ -72,13 +94,38 @@ func main() {
 								switch field.Type.(type) {
 								case *ast.FuncType:
 									fType := field.Type.(*ast.FuncType)
-									fmt.Printf("fType.Params.List: %v\n", fType.Params.List)
-									fmt.Printf("fType.Results: %v\n", fType.Results)
+									for i, f := range fType.Params.List {
+										fmt.Printf("field: %#v\n", f)
+										//fmt.Printf("field name: %#v\n", f.Names[0])
+										fmt.Printf("field type: %#v\n", f.Type)
+										switch f.Type.(type) {
+										case *ast.ArrayType:
+											at := f.Type.(*ast.ArrayType)
+											switch at.Elt.(type) {
+											case *ast.ArrayType:
+												att := f.Type.(*ast.ArrayType)
+												fmt.Printf("att: %#v\n", att)
+											}
+											id := at.Elt.(*ast.Ident)
+											fmt.Printf("field[%d] type: []%s", i, id.Name)
+										}
+
+									}
+									for _, f := range fType.Results.List {
+										fmt.Printf("result: %#v\n", f)
+										//fmt.Printf("result name: %#v\n", f.Names[0])
+										fmt.Printf("result type: %#v\n", f.Type)
+									}
+									//fmt.Printf("fType.Params.List: %#v\n", fType.Params.List)
+									//fmt.Printf("fType.Results: %#v\n", fType.Results)
 								}
 							}
+
 						}
 					}
-
+				case token.FUNC:
+					ft := node.(*ast.FuncType)
+					fmt.Printf("func: %v\n", ft.Func)
 				}
 			case *ast.InterfaceType:
 				decl := node.(*ast.InterfaceType)
@@ -90,6 +137,17 @@ func main() {
 				decl := node.(*ast.Ident)
 				fmt.Printf("name: %v\n", decl.Name)
 				fmt.Printf("obj: %v\n", decl.Obj)
+			case *ast.FuncType:
+				ft := node.(*ast.FuncType)
+				fmt.Printf("func: %v\n", ft.Func)
+			case *ast.FuncDecl:
+				fd := node.(*ast.FuncDecl)
+				fmt.Printf("FuncDecl: %#v\n", fd)
+			case *ast.FuncLit:
+				fl := node.(*ast.FuncLit)
+				fmt.Printf("FuncLit: %#v\n", fl)
+			default:
+				fmt.Printf("default: %#v\n", node)
 			}
 			return true
 		})
@@ -100,4 +158,3 @@ func main() {
 	}
 	fmt.Println("json: ", string(json))
 }
-
