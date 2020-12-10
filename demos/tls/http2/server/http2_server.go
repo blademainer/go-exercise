@@ -1,21 +1,24 @@
 package main
 
 import (
-	"fmt"
+	"crypto/tls"
 	"crypto/x509"
+	"fmt"
 	"io/ioutil"
 	"net/http"
-	"crypto/tls"
 )
-
 
 type myhandler struct {
 }
 
-func (h *myhandler) ServeHTTP(w http.ResponseWriter,
-	r *http.Request) {
-	fmt.Fprintf(w,
-		"Hi, This is an example of http service in golang!\n")
+func (h *myhandler) ServeHTTP(
+	w http.ResponseWriter,
+	r *http.Request,
+) {
+	fmt.Fprintf(
+		w,
+		"Hi, This is an example of http service in golang!\n",
+	)
 }
 
 func main() {
@@ -55,11 +58,8 @@ func main() {
 		fmt.Println("ListenAndServeTLS err:", err)
 	}
 
-
 	// // support http2
 	// if err := Router.RunTLS(Config.Listen, Config.Tls.CertFile, Config.Tls.KeyFile); err != nil {
 	// 	panic(err)
 	// }
 }
-
-
