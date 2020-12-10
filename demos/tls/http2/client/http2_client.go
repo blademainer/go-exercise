@@ -23,18 +23,18 @@ type (
 const HTTP_TIMEOUT = time.Second * 60
 
 func InitHttp2Client() (*http.Client, error) {
-	//file, e := ioutil.ReadFile(tlsConfig.CertFile)
-	//if e != nil {
-	//	msg := fmt.Sprintf("Error when read file: %s error: %s \n", tlsConfig.CertFile, e.Error())
-	//	panic(msg)
-	//}
-	//Logger.Infof("Read cert file: %s \n", file)
-	//roots := x509.NewCertPool()
-	//ok := roots.AppendCertsFromPEM([]byte(file))
-	//if !ok {
-	//	panic("failed to parse root certificate")
-	//}
-	//c := &tls.Config{RootCAs: roots}
+	// file, e := ioutil.ReadFile(tlsConfig.CertFile)
+	// if e != nil {
+	// 	msg := fmt.Sprintf("Error when read file: %s error: %s \n", tlsConfig.CertFile, e.Error())
+	// 	panic(msg)
+	// }
+	// Logger.Infof("Read cert file: %s \n", file)
+	// roots := x509.NewCertPool()
+	// ok := roots.AppendCertsFromPEM([]byte(file))
+	// if !ok {
+	// 	panic("failed to parse root certificate")
+	// }
+	// c := &tls.Config{RootCAs: roots}
 	clientCertPool := x509.NewCertPool()
 	caCertPath := "demos/tls/key/ca.crt"
 
@@ -44,38 +44,38 @@ func InitHttp2Client() (*http.Client, error) {
 	}
 	clientCertPool.AppendCertsFromPEM(caCrt)
 
-	//certBytes, e := x509.ParseCertificate(file)
-	//certificate, e := tls.LoadX509KeyPair("demos/tls/key/client.crt", "demos/tls/key/client.key")
-	//if e != nil {
-	//	fmt.Printf("Error when load certificate！error: %s \n", e.Error())
-	//	return nil, e
-	//}
-	//certificates := []tls.Certificate{certificate}
-	//c := &tls.Config{
-	//	Certificates: certificates,
-	//	//ClientAuth:   tls.RequireAndVerifyClientCert,
-	//	RootCAs: clientCertPool,
-	//	//InsecureSkipVerify:true,
-	//}
+	// certBytes, e := x509.ParseCertificate(file)
+	// certificate, e := tls.LoadX509KeyPair("demos/tls/key/client.crt", "demos/tls/key/client.key")
+	// if e != nil {
+	// 	fmt.Printf("Error when load certificate！error: %s \n", e.Error())
+	// 	return nil, e
+	// }
+	// certificates := []tls.Certificate{certificate}
+	// c := &tls.Config{
+	// 	Certificates: certificates,
+	// 	//ClientAuth:   tls.RequireAndVerifyClientCert,
+	// 	RootCAs: clientCertPool,
+	// 	//InsecureSkipVerify:true,
+	// }
 	c, err := newTLSCofig(caCertPath, "demos/tls/key/client.crt", "demos/tls/key/client.key")
 	if err != nil{
 		panic(err)
 	}
-	//c := &tls.Config{InsecureSkipVerify: true}
+	// c := &tls.Config{InsecureSkipVerify: true}
 
 	tr := &http2.Transport{
 		AllowHTTP: true,
-		//DialTLS: func(network, addr string, cfg *tls.Config) (net.Conn, error) {
+		// DialTLS: func(network, addr string, cfg *tls.Config) (net.Conn, error) {
 		//	cfg.Certificates = []tls.Certificate(certificates)
 		//	return net.Dial(network, addr)
-		//},
+		// },
 		TLSClientConfig: c,
 	}
 	cli := &http.Client{Transport: tr, Timeout: HTTP_TIMEOUT}
 	return cli, nil
 }
 
-//newTLSCofig only skip hostname verification
+// newTLSCofig only skip hostname verification
 func newTLSCofig(caCrtFile, certFile, keyFile string) (*tls.Config, error) {
 	caCrt, err := ioutil.ReadFile(caCrtFile)
 	if err != nil {
@@ -140,21 +140,21 @@ func main() {
 			go func(response chan []byte) {
 				wg.Add(1)
 				defer wg.Done()
-				//fmt.Println("new go func")
-				//response <- []byte("ccc")
+				// fmt.Println("new go func")
+				// response <- []byte("ccc")
 
 				reader := bytes.NewReader([]byte("hello!"))
 				if resp, err := client.Post("https://127.0.0.1:8443/h2", "application/json", reader); err == nil {
 					body := make([]byte, 1024)
 					if n, err2 := resp.Body.Read(body); err2 == nil {
 						data := body[:n]
-						//fmt.Println("data: ", string(data))
+						// fmt.Println("data: ", string(data))
 						response <- data
 					} else {
 						fmt.Printf("Error to send data: %s \n", err2.Error())
 					}
-					//if not close, may produce memory leak
-					//resp.Body.Close()
+					// if not close, may produce memory leak
+					// resp.Body.Close()
 				} else {
 					fmt.Printf("Error to send data: %s \n", err.Error())
 				}

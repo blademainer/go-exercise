@@ -3,9 +3,9 @@ package main
 import (
 	"bytes"
 	"fmt"
-	"html/template"
 	"path/filepath"
 	"runtime"
+	"text/template"
 )
 
 // basepath is the root directory of this package.
@@ -63,7 +63,7 @@ func Init() {
 
 func Execute() string {
 	data := map[string]interface{}{
-		"person": Person{"Zhangsan", 11},
+		"person": Person{"张三", 11},
 		"m": map[string]interface{}{
 			"name": "zhangsan",
 			"age":  11,

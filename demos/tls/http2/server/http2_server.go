@@ -20,14 +20,14 @@ func (h *myhandler) ServeHTTP(w http.ResponseWriter,
 
 func main() {
 
-	//Router = gin.Default()
+	// Router = gin.Default()
 	//
-	//Router.POST("/h2", func(context *gin.Context) {
-	//	if bytes, e := context.GetRawData(); e == nil {
-	//		fmt.Println(string(bytes))
-	//		context.Writer.WriteString("Good: " + string(bytes))
-	//	}
-	//})
+	// Router.POST("/h2", func(context *gin.Context) {
+	// 	if bytes, e := context.GetRawData(); e == nil {
+	// 		fmt.Println(string(bytes))
+	// 		context.Writer.WriteString("Good: " + string(bytes))
+	// 	}
+	// })
 
 	pool := x509.NewCertPool()
 	caCertPath := "demos/tls/key/ca.crt"
@@ -38,9 +38,9 @@ func main() {
 		return
 	}
 	pool.AppendCertsFromPEM(caCrt)
-	//初始化一个server 实例。
+	// 初始化一个server 实例。
 	s := &http.Server{
-		//设置宿主机的ip地址，并且端口号为8081
+		// 设置宿主机的ip地址，并且端口号为8081
 		Addr:    ":8443",
 		Handler: &myhandler{},
 		TLSConfig: &tls.Config{
@@ -56,10 +56,10 @@ func main() {
 	}
 
 
-	//// support http2
-	//if err := Router.RunTLS(Config.Listen, Config.Tls.CertFile, Config.Tls.KeyFile); err != nil {
-	//	panic(err)
-	//}
+	// // support http2
+	// if err := Router.RunTLS(Config.Listen, Config.Tls.CertFile, Config.Tls.KeyFile); err != nil {
+	// 	panic(err)
+	// }
 }
 
 
