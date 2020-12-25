@@ -23,6 +23,7 @@ import (
 	"context"
 	"flag"
 	"log"
+	"sync"
 	"time"
 
 	"google.golang.org/grpc"
@@ -31,26 +32,47 @@ import (
 
 var addr = flag.String("addr", "localhost:50052", "the address to connect to")
 
-func main() {
-	flag.Parse()
-
-	// Set up a connection to the server.
-	conn, err := grpc.Dial(*addr, grpc.WithInsecure(), grpc.WithBlock())
-	if err != nil {
-		log.Fatalf("did not connect: %v", err)
-	}
-	defer func() {
-		if e := conn.Close(); e != nil {
-			log.Printf("failed to close connection: %s", e)
+var p = sync.Pool{
+	New: func() interface{} {
+		conn, err := grpc.Dial(*addr, grpc.WithInsecure(), grpc.WithBlock())
+		if err != nil {
+			log.Fatalf("did not connect: %v", err)
 		}
-	}()
-	c := pb.NewGreeterClient(conn)
+		return conn
+	},
+}
+
+func test() {
+	// Set up a connection to the server.
+	// conn, err := grpc.Dial(*addr, grpc.WithInsecure(), grpc.WithBlock())
+	// if err != nil {
+	// 	log.Fatalf("did not connect: %v", err)
+	// }
+	get := p.Get()
+	defer p.Put(get)
+	c := pb.NewGreeterClient(get.(*grpc.ClientConn))
 
 	ctx, cancel := context.WithTimeout(context.Background(), time.Second)
 	defer cancel()
 	r, err := c.SayHello(ctx, &pb.HelloRequest{Name: "world"})
 	if err != nil {
-		log.Fatalf("error: %v", err.Error())
+		log.Printf("error: %v", err.Error())
+	} else {
+		log.Printf("Greeting: %s", r.Message)
 	}
-	log.Printf("Greeting: %s", r.Message)
+}
+
+func main() {
+	flag.Parse()
+	wg := sync.WaitGroup{}
+	for i := 0; i < 1000; i++ {
+		wg.Add(1)
+		go func() {
+			defer wg.Done()
+			for i := 0; i < 100; i++ {
+				test()
+			}
+		}()
+	}
+	wg.Wait()
 }
