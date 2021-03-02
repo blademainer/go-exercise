@@ -2,6 +2,8 @@ package main
 
 import "fmt"
 
+// go build -o rwop.bin -gcflags -S ./
+
 func main() {
 	ageMp := make(map[string]int)
 	ageMp["qcrao"] = 18
