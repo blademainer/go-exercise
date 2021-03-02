@@ -10,12 +10,12 @@ type SliceKey struct {
 }
 
 func (s SliceKey) String() string {
-	return fmt.Sprint(s)
+	return fmt.Sprint(s.string)
 }
 
 
 func main() {
-	strings := make(map[SliceKey]string)
-	strings[SliceKey{string: "123"}] = "123"
+	strings := make(map[A]string)
+	strings["123"] = "123"
 	fmt.Println(strings)
 }
