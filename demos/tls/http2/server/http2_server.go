@@ -34,7 +34,7 @@ func main() {
 	// })
 
 	pool := x509.NewCertPool()
-	caCertPath := "demos/tls/key/ca.crt"
+	caCertPath := "demos/tls/key/client_ca.crt"
 
 	caCrt, err := ioutil.ReadFile(caCertPath)
 	if err != nil {

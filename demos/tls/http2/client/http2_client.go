@@ -20,35 +20,11 @@ type (
 	}
 )
 
-const HTTP_TIMEOUT = time.Second * 60
+const httpTimeout = time.Second * 60
 
 func InitHttp2Client() (*http.Client, error) {
-	//file, e := ioutil.ReadFile(tlsConfig.CertFile)
-	//if e != nil {
-	//	msg := fmt.Sprintf("Error when read file: %s error: %s \n", tlsConfig.CertFile, e.Error())
-	//	panic(msg)
-	//}
-	//Logger.Infof("Read cert file: %s \n", file)
-	//roots := x509.NewCertPool()
-	//ok := roots.AppendCertsFromPEM([]byte(file))
-	//if !ok {
-	//	panic("failed to parse root certificate")
-	//}
-	//c := &tls.Config{RootCAs: roots}
-	// file, e := ioutil.ReadFile(tlsConfig.CertFile)
-	// if e != nil {
-	// 	msg := fmt.Sprintf("Error when read file: %s error: %s \n", tlsConfig.CertFile, e.Error())
-	// 	panic(msg)
-	// }
-	// Logger.Infof("Read cert file: %s \n", file)
-	// roots := x509.NewCertPool()
-	// ok := roots.AppendCertsFromPEM([]byte(file))
-	// if !ok {
-	// 	panic("failed to parse root certificate")
-	// }
-	// c := &tls.Config{RootCAs: roots}
 	clientCertPool := x509.NewCertPool()
-	caCertPath := "demos/tls/key/ca.crt"
+	caCertPath := "demos/tls/key/ca.crt" // add server ca
 
 	caCrt, err := ioutil.ReadFile(caCertPath)
 	if err != nil {
@@ -56,32 +32,6 @@ func InitHttp2Client() (*http.Client, error) {
 	}
 	clientCertPool.AppendCertsFromPEM(caCrt)
 
-	//certBytes, e := x509.ParseCertificate(file)
-	//certificate, e := tls.LoadX509KeyPair("demos/tls/key/client.crt", "demos/tls/key/client.key")
-	//if e != nil {
-	//	fmt.Printf("Error when load certificate！error: %s \n", e.Error())
-	//	return nil, e
-	//}
-	//certificates := []tls.Certificate{certificate}
-	//c := &tls.Config{
-	//	Certificates: certificates,
-	//	//ClientAuth:   tls.RequireAndVerifyClientCert,
-	//	RootCAs: clientCertPool,
-	//	//InsecureSkipVerify:true,
-	//}
-	// certBytes, e := x509.ParseCertificate(file)
-	// certificate, e := tls.LoadX509KeyPair("demos/tls/key/client.crt", "demos/tls/key/client.key")
-	// if e != nil {
-	// 	fmt.Printf("Error when load certificate！error: %s \n", e.Error())
-	// 	return nil, e
-	// }
-	// certificates := []tls.Certificate{certificate}
-	// c := &tls.Config{
-	// 	Certificates: certificates,
-	// 	//ClientAuth:   tls.RequireAndVerifyClientCert,
-	// 	RootCAs: clientCertPool,
-	// 	//InsecureSkipVerify:true,
-	// }
 	c, err := newTLSCofig(caCertPath, "demos/tls/key/client.crt", "demos/tls/key/client.key")
 	if err != nil{
 		panic(err)
@@ -97,7 +47,7 @@ func InitHttp2Client() (*http.Client, error) {
 		// },
 		TLSClientConfig: c,
 	}
-	cli := &http.Client{Transport: tr, Timeout: HTTP_TIMEOUT}
+	cli := &http.Client{Transport: tr, Timeout: httpTimeout}
 	return cli, nil
 }
 
