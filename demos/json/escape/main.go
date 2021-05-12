@@ -1,10 +1,10 @@
 package main
 
 import (
+	"bytes"
 	"encoding/json"
 	"fmt"
 )
-
 
 func main() {
 	type a struct {
@@ -19,7 +19,18 @@ func main() {
 	}
 	fmt.Println(string(raw))
 
-	err = json.Unmarshal(raw, &aa)
+	// disable EscapeHTML
+	bts := bytes.NewBuffer(nil)
+	encoder := json.NewEncoder(bts)
+	encoder.SetEscapeHTML(false)
+	err = encoder.Encode(aa)
+	if err != nil {
+		panic(err)
+	}
+	fmt.Println(bts.String())
+
+	// unmarshal
+	err = json.Unmarshal(bts.Bytes(), &aa)
 	if err != nil {
 		panic(err)
 	}

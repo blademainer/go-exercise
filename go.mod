@@ -2,7 +2,6 @@ module github.com/blademainer/go-exercise
 
 require (
 	cloud.google.com/go v0.26.0
-	github.com/alecthomas/template v0.0.0-20190718012654-fb15b899a751 // indirect
 	github.com/alecthomas/units v0.0.0-20190924025748-f65c72e2690d // indirect
 	github.com/blademainer/commons v0.0.13
 	github.com/chrislusf/glow v0.0.0-20181102060906-4c40a2717eee
@@ -17,6 +16,8 @@ require (
 	github.com/inconshreveable/go-update v0.0.0-20160112193335-8152e7eb6ccf // indirect
 	github.com/jinzhu/gorm v1.9.12
 	github.com/mattn/go-isatty v0.0.4 // indirect
+	github.com/modern-go/concurrent v0.0.0-20180306012644-bacd9c7ef1dd // indirect
+	github.com/modern-go/reflect2 v1.0.1 // indirect
 	github.com/prometheus/client_golang v1.7.0
 	github.com/psilva261/timsort v0.0.0-20190627160904-7d0a5d71371e // indirect
 	github.com/ugorji/go v0.0.0-20180407103000-f3cacc17c85e // indirect
@@ -29,8 +30,6 @@ require (
 	golang.org/x/tour v0.0.0-20180314180224-daf29d8a3774
 	google.golang.org/genproto v0.0.0-20190927181202-20e1ac93f88c
 	google.golang.org/grpc v1.26.0
-	gopkg.in/alecthomas/kingpin.v2 v2.2.6 // indirect
-	gopkg.in/go-playground/assert.v1 v1.2.1 // indirect
 	gopkg.in/go-playground/validator.v8 v8.18.2 // indirect
 	gopkg.in/yaml.v2 v2.2.7
 
