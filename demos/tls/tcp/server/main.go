@@ -13,7 +13,7 @@ func main() {
 	if err != nil {
 		panic(err.Error())
 	}
-	config, err := tls2.NewTLSConfig(
+	config, err := tls2.NewServerTLSConfig(
 		"demos/tls/key/ca.crt", "demos/tls/key/server.crt", "demos/tls/key/server.key",
 	)
 	if err != nil {

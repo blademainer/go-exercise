@@ -8,8 +8,8 @@ import (
 )
 
 func main() {
-	config, err := tls2.NewTLSConfig(
-		"demos/tls/key/ca.crt", "demos/tls/key/server.crt", "demos/tls/key/server.key",
+	config, err := tls2.NewClientTLSConfig(
+		"demos/tls/key/ca.crt", "demos/tls/key/client.crt", "demos/tls/key/client.key",
 	)
 	if err != nil {
 		panic(err.Error())
