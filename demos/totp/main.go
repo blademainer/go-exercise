@@ -19,13 +19,15 @@ func main() {
 	// TOTP = HOTP(密钥, TC),
 	// 	TOTP-值 = TOTP mod 10d，d 是所需的一次性密码的位数。
 	key := []byte("hello totp")
-	token, err := NewToken(key, 4)
+	token, err := NewToken(key, 6)
 	if err != nil {
 		panic(err.Error())
 	}
 	t := time.NewTicker(1 * time.Second)
 	defer t.Stop()
+	i := 0
 	for range t.C {
+		i++
 		fmt.Println(token.Gen())
 		// fmt.Println(token.GenByTime(t0))
 	}

@@ -156,3 +156,15 @@ func TestToken_sum(t1 *testing.T) {
 		)
 	}
 }
+
+func BenchmarkToken_Gen(b *testing.B) {
+	key := []byte("hello totp")
+	token, err := NewToken(key, 6)
+	if err != nil {
+		panic(err.Error())
+	}
+
+	for i := 0; i < b.N; i++ {
+		token.Gen()
+	}
+}
