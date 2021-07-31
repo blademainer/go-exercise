@@ -1,0 +1,9 @@
+map: {{if .m.age }}{{.m.age}}{{ else }}0{{end}}
+m: {{ .m.illegalField }}
+map: {{$illegalField := .m.illegalField}} {{if $illegalField }} {{$illegalField}} {{ else }}0{{end}}
+map: {{$age := .m.age}}{{if $age }}{{$age}}{{ else }}0{{end}}
+say: {{ .person.Say "Master" }}
+{{$x := "output" }}{{ .person.Say $x }}
+{{with $y := "output" }}{{ . }}{{end}}
+{{$x = printf $x "append"}} {{ . }}
+{{ call .m.say "Master" }}

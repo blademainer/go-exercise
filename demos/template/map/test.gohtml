@@ -1,0 +1,13 @@
+{{- if or (eq .person.Name "Zhangsan") (eq .person.Name "Lisi") -}}
+    My dear master!
+{{- else -}}
+    Hello {{ .person.Name }}
+{{- end }}
+your age: {{ .person.Age }} multiply twice age: {{ multiAge .person }}
+map age:
+{{- with .m.age -}}
+    {{ . }}
+{{- else -}}
+0
+{{- end }}
+Say: {{ .person.Say }}
