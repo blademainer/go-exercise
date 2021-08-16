@@ -11,6 +11,9 @@ require (
 	github.com/gin-gonic/gin v0.0.0-20170702092826-d459835d2b07
 	github.com/go-git/go-git v3.2.0+incompatible // indirect
 	github.com/go-git/go-git/v5 v5.4.2
+	github.com/gogap/aop v0.0.0-20160204122730-543aa873fb37 // indirect
+	github.com/gogap/errors v0.0.0-20200228125012-531a6449b28c // indirect
+	github.com/gogap/stack v0.0.0-20150131034635-fef68dddd4f8 // indirect
 	github.com/golang/mock v1.3.1
 	github.com/golang/protobuf v1.4.2
 	github.com/google/wire v0.4.0
@@ -22,10 +25,14 @@ require (
 	github.com/modern-go/reflect2 v1.0.1 // indirect
 	github.com/prometheus/client_golang v1.7.0
 	github.com/psilva261/timsort v0.0.0-20190627160904-7d0a5d71371e // indirect
+	github.com/rs/xid v1.2.1 // indirect
 	github.com/sergi/go-diff v1.2.0 // indirect
 	github.com/ugorji/go v0.0.0-20180407103000-f3cacc17c85e // indirect
 	github.com/vektra/mockery v0.0.0-20181123154057-e78b021dcbb5 // indirect
 	github.com/weaveworks/procspy v0.0.0-20150706124340-cb970aa190c3
+	golang.org/x/crypto v0.0.0-20191205180655-e7c4368fe9dd
+	golang.org/x/net v0.0.0-20191002035440-2ec189313ef0
+	golang.org/x/sync v0.0.0-20190423024810-112230192c58
 	golang.org/x/crypto v0.0.0-20210421170649-83a5a9bb288b
 	golang.org/x/net v0.0.0-20210326060303-6b1517762897
 	golang.org/x/sync v0.0.0-20190911185100-cd5d95a43a6e
@@ -34,6 +41,7 @@ require (
 	google.golang.org/genproto v0.0.0-20190927181202-20e1ac93f88c
 	google.golang.org/grpc v1.26.0
 	gopkg.in/go-playground/validator.v8 v8.18.2 // indirect
+	gopkg.in/yaml.v2 v2.2.7
 	gopkg.in/sourcegraph/go-vcsurl.v1 v1.0.0-20131114132947-6b12603ea6fd // indirect
 	gopkg.in/src-d/go-git.v3 v3.2.0 // indirect
 	gopkg.in/yaml.v2 v2.3.0
