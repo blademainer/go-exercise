@@ -3,6 +3,9 @@ package main
 import "fmt"
 
 type a struct {
+	Name  string
+	Value string
+	A     *a
 }
 
 var emptyA = &a{}
