@@ -32,7 +32,6 @@ func main() {
 	}
 	// debug.PrintStack()
 
-
 	if v := p.Get(); v != 3 {
 		log.Fatalf("got %v; want 3", v)
 	}

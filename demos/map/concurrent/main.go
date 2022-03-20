@@ -27,5 +27,5 @@ func main() {
 		}
 	}()
 
-	select{}
+	select {}
 }

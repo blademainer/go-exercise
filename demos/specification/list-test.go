@@ -1,8 +1,9 @@
 package main
 
 import (
-	"./util/collection"
 	"fmt"
+
+	"github.com/blademainer/go-exercise/util/collection"
 )
 
 func MultiInsert() {
@@ -10,7 +11,7 @@ func MultiInsert() {
 }
 
 func main() {
-	list := collection.Init()
+	list := collection.New[int]()
 	for i := 0; i < 100000; i++ {
 		list.Add(i)
 	}

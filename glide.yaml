@@ -1,9 +1,9 @@
 package: github.com/blademainer/go-exercise
 import:
-- package: github.com/gin-gonic/gin
-  version: ^1.2.0
-- package: golang.org/x/tour
-  subpackages:
-  - tree
-- package: gopkg.in/yaml.v2
-  version: ^2.2.1
+  - package: github.com/gin-gonic/gin
+    version: ^1.2.0
+  - package: golang.org/x/tour
+    subpackages:
+      - tree
+  - package: gopkg.in/yaml.v2
+    version: ^2.2.1

@@ -5,7 +5,7 @@ import (
 	"unsafe"
 )
 
-func main()  {
+func main() {
 	h := 1
 	p := &h
 	var l = (*int64)(unsafe.Pointer(p))

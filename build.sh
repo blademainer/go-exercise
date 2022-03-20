@@ -2,7 +2,7 @@
 
 export GO111MODULE=on
 
-cmd_dir="cmd"
+cmd_dir="."
 
 # Find main() func and build to bin
 # For example, build source "cmd/app/main.go" to ./bin/app

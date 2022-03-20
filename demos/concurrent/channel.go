@@ -13,7 +13,7 @@ func main() {
 			receiver <- i
 		}
 		// compile error...
-		//fmt.Println(<-receiver)
+		// fmt.Println(<-receiver)
 	}(c)
 
 	func(sender <-chan int) {

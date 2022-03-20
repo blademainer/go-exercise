@@ -2,7 +2,6 @@ package main
 
 import (
 	"fmt"
-	"gopkg.in/yaml.v2"
 	"hash/fnv"
 	"io/ioutil"
 	"log"
@@ -13,6 +12,8 @@ import (
 	"strings"
 	"sync"
 	"time"
+
+	"gopkg.in/yaml.v2"
 )
 
 type Fetcher interface {
@@ -41,7 +42,7 @@ func Crawl(url string, depth int, fetcher OurFetcher) {
 		fmt.Println("err2 ======= ", err)
 		return
 	}
-	//fmt.Printf("found: %s %q\n", url, body)
+	// fmt.Printf("found: %s %q\n", url, body)
 	done := make(chan bool)
 	fmt.Printf("Found urls: %s by url: %s \n", urls, url)
 	for _, u := range urls {
@@ -95,7 +96,7 @@ func (f OurFetcher) Fetch(url string) (string, []string, error) {
 	httpBody, _ := ioutil.ReadAll(resp.Body)
 	body := string(httpBody)
 
-	//fmt.Printf("Read %s bytes to string: %s \n", n, s)
+	// fmt.Printf("Read %s bytes to string: %s \n", n, s)
 	urls := FindUrls(body)
 	fmt.Printf("Found urls: %s \n", urls)
 	result := &Result{body: body, urls: urls}
@@ -139,8 +140,8 @@ func FindUrls(string string) []string {
 	}
 
 	allString := compile.FindAllString(string, -1)
-	//length := len(allString)
-	//var newUrls [10]string
+	// length := len(allString)
+	// var newUrls [10]string
 	for i, url := range allString {
 		newString := strings.Replace(url, "\"", "", -1)
 		allString[i] = newString
@@ -175,29 +176,29 @@ func main() {
 	var url = conf.Url
 	var depth = conf.Depth
 	dir = conf.StorageDir
-	//args := os.Args
-	//if len(args) >= 3 {
+	// args := os.Args
+	// if len(args) >= 3 {
 	//	url = args[1]
 	//	i, _ := strconv.Atoi(args[2])
 	//	depth = i
-	//}
+	// }
 
 	for {
 		fetcher := OurFetcher{result: make(map[string]*Result)}
 		Crawl(url, depth, fetcher)
 	}
-	//time.Sleep(time.Minute)
+	// time.Sleep(time.Minute)
 }
 
-//func (f fetcher) Fetch(url string) (string, []string, error) {
+// func (f fetcher) Fetch(url string) (string, []string, error) {
 //	if res, ok := f[url]; ok {
 //		return res.body, res.urls, nil
 //	}
 //	return "", nil, fmt.Errorf("not found: %s", url)
-//}
+// }
 
 // fetcher is a populated fetcher.
-//var fetcher = fetcher{
+// var fetcher = fetcher{
 //	"http://golang.org/": &Result{
 //		"The Go Programming Language",
 //		[]string{
@@ -228,4 +229,4 @@ func main() {
 //			"http://golang.org/pkg/",
 //		},
 //	},
-//}
+// }

@@ -7,4 +7,3 @@ func Benchmark(b *testing.B) {
 		main()
 	}
 }
-

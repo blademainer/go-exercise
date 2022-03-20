@@ -65,3 +65,34 @@ func TestSumNumber(t *testing.T) {
 		)
 	}
 }
+
+func TestSumNumberExt(t *testing.T) {
+	type args struct {
+		m map[string]IntType
+	}
+	tests := []struct {
+		name string
+		args args
+		want IntType
+	}{
+		{
+			name: "t1",
+			args: args{
+				m: map[string]IntType{
+					"a": 1,
+					"b": 2,
+				},
+			},
+			want: 3,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(
+			tt.name, func(t *testing.T) {
+				if got := SumNumber(tt.args.m); got != tt.want {
+					t.Errorf("Sum() = %v, want %v", got, tt.want)
+				}
+			},
+		)
+	}
+}

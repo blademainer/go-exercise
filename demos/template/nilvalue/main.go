@@ -50,11 +50,13 @@ func Init() {
 	var err error
 	tmpl, err = template.
 		New("test.gohtml").
-		Funcs(template.FuncMap{
-			"multiAge": func(person Person) int {
-				return person.Age * 2
+		Funcs(
+			template.FuncMap{
+				"multiAge": func(person Person) int {
+					return person.Age * 2
+				},
 			},
-		}).
+		).
 		Option("missingkey=default").
 		ParseFiles(abs)
 	if err != nil {
@@ -70,7 +72,7 @@ func Execute() string {
 		"m": map[string]interface{}{
 			"name": "zhangsan",
 			"age":  11,
-			"say": p.Say,
+			"say":  p.Say,
 		},
 	}
 	return ExecuteData(data)

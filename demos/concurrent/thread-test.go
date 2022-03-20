@@ -1,11 +1,12 @@
 package main
 
 import (
-	"./util/collection"
 	"fmt"
+
+	"github.com/blademainer/go-exercise/util/collection"
 )
 
-func add(list *collection.List, i chan int) {
+func add(list *collection.List[int], i chan int) {
 	for j := 0; j <= 100; j++ {
 		i <- j
 		list.Add(j)
@@ -15,7 +16,7 @@ func add(list *collection.List, i chan int) {
 
 func main() {
 	i := make(chan int)
-	list := collection.Init()
+	list := collection.New[int]()
 	go add(list, i)
 	go add(list, i)
 	go add(list, i)

@@ -13,9 +13,11 @@ func main() {
 		wg.Add(1)
 		go func(index int) {
 			time.Sleep(10 * time.Millisecond)
-			once.Do(func() {
-				fmt.Println("init!!!", index) // random!!!
-			})
+			once.Do(
+				func() {
+					fmt.Println("init!!!", index) // random!!!
+				},
+			)
 			wg.Done()
 		}(i)
 	}

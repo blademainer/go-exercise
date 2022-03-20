@@ -42,7 +42,6 @@ func PrettyJson(bytes []byte) []byte {
 		return bytes
 	}
 
-
 	if isArray {
 		s := make([]map[string]interface{}, 1)
 		ptr := &s

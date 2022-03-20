@@ -20,7 +20,7 @@ func main() {
 	for s := 0; s <= 100; s++ {
 		fmt.Println(<-upString)
 	}
-	//for i := range upString {
+	// for i := range upString {
 	//	fmt.Println(i)
-	//}
+	// }
 }

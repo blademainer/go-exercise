@@ -136,10 +136,14 @@ func (p *Parser) typeEncoder(t reflect.Type) encoderFunc {
 		f  encoderFunc
 	)
 	wg.Add(1)
-	fi, loaded := p.encoderCache.LoadOrStore(t, encoderFunc(func(e *encodeState, v reflect.Value, opts *Parser) {
-		wg.Wait()
-		f(e, v, opts)
-	}))
+	fi, loaded := p.encoderCache.LoadOrStore(
+		t, encoderFunc(
+			func(e *encodeState, v reflect.Value, opts *Parser) {
+				wg.Wait()
+				f(e, v, opts)
+			},
+		),
+	)
 	if loaded {
 		return fi.(encoderFunc)
 	}

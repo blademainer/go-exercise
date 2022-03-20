@@ -6,7 +6,6 @@ type Dog struct {
 	Name string
 }
 
-
 func f1() (result int) {
 	defer func() {
 		fmt.Println("defer result is: ", result)

@@ -18,7 +18,9 @@ var (
 	uniformDomain     = flag.Float64("uniform.domain", 0.0002, "The domain for the uniform distribution.")
 	normDomain        = flag.Float64("normal.domain", 0.0002, "The domain for the normal distribution.")
 	normMean          = flag.Float64("normal.mean", 0.00001, "The mean for the normal distribution.")
-	oscillationPeriod = flag.Duration("oscillation-period", 10*time.Minute, "The duration of the rate oscillation period.")
+	oscillationPeriod = flag.Duration(
+		"oscillation-period", 10*time.Minute, "The duration of the rate oscillation period.",
+	)
 )
 
 var (
@@ -37,11 +39,13 @@ var (
 	// distribution. The buckets are targeted to the parameters of the
 	// normal distribution, with 20 buckets centered on the mean, each
 	// half-sigma wide.
-	rpcDurationsHistogram = prometheus.NewHistogram(prometheus.HistogramOpts{
-		Name:    "rpc_durations_histogram_seconds",
-		Help:    "RPC latency distributions.",
-		Buckets: prometheus.LinearBuckets(*normMean-5**normDomain, .5**normDomain, 20),
-	})
+	rpcDurationsHistogram = prometheus.NewHistogram(
+		prometheus.HistogramOpts{
+			Name:    "rpc_durations_histogram_seconds",
+			Help:    "RPC latency distributions.",
+			Buckets: prometheus.LinearBuckets(*normMean-5**normDomain, .5**normDomain, 20),
+		},
+	)
 )
 
 func init() {
@@ -96,12 +100,14 @@ func main() {
 	}()
 
 	// Expose the registered metrics via HTTP.
-	http.Handle("/metrics", promhttp.HandlerFor(
-		prometheus.DefaultGatherer,
-		promhttp.HandlerOpts{
-			// Opt into OpenMetrics to support exemplars.
-			EnableOpenMetrics: true,
-		},
-	))
+	http.Handle(
+		"/metrics", promhttp.HandlerFor(
+			prometheus.DefaultGatherer,
+			promhttp.HandlerOpts{
+				// Opt into OpenMetrics to support exemplars.
+				EnableOpenMetrics: true,
+			},
+		),
+	)
 	log.Fatal(http.ListenAndServe(*addr, nil))
 }

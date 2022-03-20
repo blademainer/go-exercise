@@ -34,13 +34,13 @@ func newEntityEvent() Event {
 func main() {
 	e := newPtrEvent()
 	e.notify()
-	//ee := e.(ptrEvent) // ptrEvent does not implement Event (notify method has pointer receiver)
+	// ee := e.(ptrEvent) // ptrEvent does not implement Event (notify method has pointer receiver)
 	ee := e.(*ptrEvent)
 	fmt.Printf("Type: %T \n", ee)
 
 	e2 := newEntityEvent()
 	e2.notify()
-	//ee2 := e2.(*entityEvent) // interface conversion: main.Event is main.entityEvent, not *main.entityEvent
+	// ee2 := e2.(*entityEvent) // interface conversion: main.Event is main.entityEvent, not *main.entityEvent
 	ee2 := e2.(entityEvent)
 	fmt.Printf("Type: %T \n", ee2)
 }

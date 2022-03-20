@@ -22,9 +22,10 @@ package main
 import (
 	"context"
 	"flag"
-	"github.com/blademainer/go-exercise/pkg/grpc/proto"
 	"log"
 	"time"
+
+	"github.com/blademainer/go-exercise/pkg/grpc/proto"
 
 	"google.golang.org/grpc"
 )
@@ -52,13 +53,17 @@ func main() {
 	defer cancelRpc()
 
 	// may caused error: context deadline exceeded. because of the grpc context is timeout.
-	r, err := client.Curl(ctx, &proto.CurlRequest{Url: "https://dldir1.qq.com/weixin/android/weixin7013android1640.apk"})
+	r, err := client.Curl(
+		ctx, &proto.CurlRequest{Url: "https://dldir1.qq.com/weixin/android/weixin7013android1640.apk"},
+	)
 	if err != nil {
 		log.Printf("error: %v", err.Error())
 	} else {
 		log.Printf("Response data len: %v", len(r.Data))
 	}
-	r, err = client.Curl(ctx, &proto.CurlRequest{}) // rpc error: code = InvalidArgument desc = invalid CurlRequest.Url: value must be absolute
+	r, err = client.Curl(
+		ctx, &proto.CurlRequest{},
+	) // rpc error: code = InvalidArgument desc = invalid CurlRequest.Url: value must be absolute
 	if err != nil {
 		log.Printf("error: %v", err.Error())
 	} else {

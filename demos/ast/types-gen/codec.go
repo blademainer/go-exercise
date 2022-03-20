@@ -4,7 +4,6 @@ import (
 	"bytes"
 	"flag"
 	"fmt"
-	"github.com/blademainer/go-exercise/demos/ast/types-gen/astutil"
 	"go/ast"
 	"go/format"
 	"go/token"
@@ -14,6 +13,8 @@ import (
 	"os"
 	"path/filepath"
 	"strings"
+
+	"github.com/blademainer/go-exercise/demos/ast/types-gen/astutil"
 
 	"golang.org/x/tools/go/packages"
 )
@@ -52,8 +53,8 @@ func main() {
 	flag.Parse()
 	if len(*typeNames) == 0 {
 		*typeNames = DefaultParentTypeName
-		//flag.Usage()
-		//os.Exit(2)
+		// flag.Usage()
+		// os.Exit(2)
 	}
 	if len(*receiver) == 0 {
 		*receiver = DefaultReceiverName
@@ -267,7 +268,7 @@ func (g *Generator) genDeclFunc(f *File) func(node ast.Node) bool {
 		}
 		// The name of the type of the constants we are declaring.
 		// Can change if this is a multi-element declaration.
-		//typ := ""
+		// typ := ""
 		// Loop over the elements of the declaration. Each element is a ValueSpec:
 		// a list of names possibly followed by a type, possibly followed by values.
 		// If the type and value are both missing, we carry down the type (and value,
@@ -281,7 +282,7 @@ func (g *Generator) genDeclFunc(f *File) func(node ast.Node) bool {
 				continue
 			}
 
-			//obj := id.Obj.Name
+			// obj := id.Obj.Name
 			fmt.Printf("id: %#v\n", id)
 			fmt.Printf("id name: %v\n", id.Name)
 			fmt.Printf("obj obj: %#v\n", id.Obj)
@@ -291,14 +292,14 @@ func (g *Generator) genDeclFunc(f *File) func(node ast.Node) bool {
 			fmt.Printf("obj type: %v\n", id.Obj.Type)
 			fmt.Printf("obj kind: %v\n", id.Obj.Kind)
 			typeSpec := id.Obj.Decl.(*ast.TypeSpec)
-			//typeId := typeSpec.Type.(*ast.Ident)
+			// typeId := typeSpec.Type.(*ast.Ident)
 			obj, ok := f.pkg.defs[typeSpec.Name]
 			if !ok {
 				fmt.Printf("not found ident: %v\n", id.Name)
 				continue
 			}
 
-			//obj, ok := f.pkg.defs[name]
+			// obj, ok := f.pkg.defs[name]
 			//
 			fmt.Printf("obj: %#v\n", obj)
 			if obj.Name() != g.typeName {
@@ -318,7 +319,9 @@ func (g *Generator) genDeclFunc(f *File) func(node ast.Node) bool {
 			}
 			ok, err = ip.IsTypeImplementsInterface()
 			if err != nil || !ok {
-				log.Fatalf("type: %v not implements type: %v, error: %v, ok: %v\n", tspec.Name.Name, g.interfaceType, err, ok)
+				log.Fatalf(
+					"type: %v not implements type: %v, error: %v, ok: %v\n", tspec.Name.Name, g.interfaceType, err, ok,
+				)
 			}
 
 			v := Value{
@@ -355,7 +358,10 @@ func (g *Generator) generateFunc(f *File) {
 			inArgs := strings.Join(code.InArgAndTypes, ",")
 			outArgs := strings.Join(code.OutTypes, ",")
 			inArgNames := strings.Join(code.InArgNames, ",")
-			g.Printf(funcTemplate, value.originalName, g.typeName, code.FuncName, g.owner, inArgs, outArgs, inArgNames, value.comment, funcPrefix)
+			g.Printf(
+				funcTemplate, value.originalName, g.typeName, code.FuncName, g.owner, inArgs, outArgs, inArgNames,
+				value.comment, funcPrefix,
+			)
 		}
 	}
 }
@@ -370,17 +376,17 @@ const validateVarTemplate = `var _ %[1]s = %[2]s
 const instanceTemplate = `%[1]s%[2]s = %[1]s("%[1]s") // %[1]s %[2]s
 `
 
-//const funcTemplate = `// %[4]s%[5]s
-//%[6]s
-//func (%[3]s) %[4]s%[5]s(v interface{}) (string, error) {
+// const funcTemplate = `// %[4]s%[5]s
+// %[6]s
+// func (%[3]s) %[4]s%[5]s(v interface{}) (string, error) {
 //		raw, err := %[1]s%[2]s.Marshal(v)
 //	return string(raw), err
-//}
-//`
+// }
+// `
 
-//func (Coders) JsonMarshal(v interface{}) (string, error) {
+// func (Coders) JsonMarshal(v interface{}) (string, error) {
 //	return jsonCoder.Marshal(v)
-//}
+// }
 //
 // arg1: type name
 //

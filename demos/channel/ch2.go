@@ -7,7 +7,6 @@ func main() {
 	fmt.Printf("len: %v cap: %v\n", len(dataCh), cap(dataCh))
 
 	type a struct {
-
 	}
 
 	dc := make(chan *a, 1)

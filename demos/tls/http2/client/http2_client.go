@@ -6,16 +6,17 @@ import (
 	"crypto/x509"
 	"errors"
 	"fmt"
-	"golang.org/x/net/http2"
 	"io/ioutil"
 	"net/http"
 	"sync"
 	"time"
+
+	"golang.org/x/net/http2"
 )
 
 type (
 	ContentType string
-	Encoder interface {
+	Encoder     interface {
 		Encode() ([]byte, error)
 	}
 )
@@ -33,10 +34,10 @@ func InitHttp2Client() (*http.Client, error) {
 	clientCertPool.AppendCertsFromPEM(caCrt)
 
 	c, err := newTLSCofig(caCertPath, "demos/tls/key/client.crt", "demos/tls/key/client.key")
-	if err != nil{
+	if err != nil {
 		panic(err)
 	}
-	//c := &tls.Config{InsecureSkipVerify: true}
+	// c := &tls.Config{InsecureSkipVerify: true}
 	// c := &tls.Config{InsecureSkipVerify: true}
 
 	tr := &http2.Transport{
@@ -103,7 +104,6 @@ func newTLSCofig(caCrtFile, certFile, keyFile string) (*tls.Config, error) {
 		},
 	}, nil
 }
-
 
 func main() {
 

@@ -14,7 +14,7 @@ func (t2 *T2) Set(i int) {
 	t2.i = i
 }
 
-func f(i I2){
+func f(i I2) {
 	i.Set(10)
 }
 

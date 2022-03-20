@@ -232,13 +232,13 @@ func main() {
 	fmt.Println("before: ", m.Entries)
 	sort.Sort(m)
 	fmt.Println("sorted: ", m.Entries)
-	//pack := m.Pack() // nouse
-	//fmt.Println("final: ", pack)
-	//bytes, err := json.Marshal(pack)
-	//if err != nil {
+	// pack := m.Pack() // nouse
+	// fmt.Println("final: ", pack)
+	// bytes, err := json.Marshal(pack)
+	// if err != nil {
 	//	panic(err)
-	//}
-	//fmt.Println("final json: ", string(bytes))
+	// }
+	// fmt.Println("final json: ", string(bytes))
 }
 
 func rate(entries map[string]map[string]int) float64 {

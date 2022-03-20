@@ -1,9 +1,9 @@
 language: go
 sudo: required
 services:
-- docker
+  - docker
 go:
-- 1.10.x
+  - 1.10.x
 install:
   - go get -v github.com/Masterminds/glide
   - cd $GOPATH/src/github.com/Masterminds/glide && git checkout e73500c735917e39a8b782e0632418ab70250341 && go install && cd -
@@ -14,7 +14,7 @@ install:
 
 cache:
   directories:
-  - vendor
+    - vendor
 env:
   global:
     - COMMIT=${TRAVIS_COMMIT::8}

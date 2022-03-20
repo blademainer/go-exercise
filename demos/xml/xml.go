@@ -1,9 +1,9 @@
 package main
 
 import (
+	"bytes"
 	"encoding/xml"
 	"fmt"
-	"bytes"
 )
 
 type XMLProduct struct {
@@ -23,7 +23,8 @@ func main() {
 		OriginalPrice:    "OriginalPrice",
 		BargainPrice:     "BargainPrice",
 		TotalReviewCount: 20,
-		AverageScore:     2.1}
+		AverageScore:     2.1,
+	}
 
 	out, err := xml.MarshalIndent(prod, " ", "  ")
 	if err != nil {

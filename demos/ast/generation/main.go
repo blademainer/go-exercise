@@ -5,9 +5,10 @@ import (
 	"go/ast"
 	"go/build"
 	"go/token"
-	"golang.org/x/tools/go/packages"
 	"log"
 	"strings"
+
+	"golang.org/x/tools/go/packages"
 )
 
 type AF func()

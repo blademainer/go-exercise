@@ -12,9 +12,8 @@ func main() {
 	fmt.Println(bi)
 }
 
-func leftMove(bi *big.Int, size int){
+func leftMove(bi *big.Int, size int) {
 	for i := 0; i < size; i++ {
 		*bi = *(big.NewInt(0).Mul(bi, big.NewInt(2)))
 	}
 }
-

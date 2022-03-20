@@ -1,9 +1,9 @@
 package main
 
 import (
-	"time"
 	"fmt"
 	"sync/atomic"
+	"time"
 )
 
 func main() {
@@ -18,7 +18,7 @@ func main() {
 		go func(done chan int, index int) {
 			atomic.AddInt32(&count, 1)
 			time.Sleep(10 * time.Second)
-			//fmt.Println("index: ", index)
+			// fmt.Println("index: ", index)
 			done <- index
 			atomic.AddInt32(&count, -1)
 		}(bools, i)
@@ -26,6 +26,6 @@ func main() {
 
 	for i := 0; i < 1000000; i++ {
 		<-bools
-		//fmt.Println("done: ", index)
+		// fmt.Println("done: ", index)
 	}
 }

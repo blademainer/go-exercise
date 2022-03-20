@@ -5,7 +5,7 @@ import "github.com/gin-gonic/gin"
 func main() {
 	Router := gin.Default()
 
-	Router.GET("/", )
+	Router.GET("/")
 }
 
 func handle() gin.HandlerFunc {

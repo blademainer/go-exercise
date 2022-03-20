@@ -7,7 +7,6 @@ import (
 
 func main() {
 	type a struct {
-
 	}
 
 	of := reflect.TypeOf(a{})

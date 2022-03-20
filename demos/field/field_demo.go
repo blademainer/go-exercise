@@ -3,6 +3,7 @@ package main
 import (
 	"encoding/json"
 	"fmt"
+
 	"github.com/blademainer/go-exercise/pkg/field"
 )
 
@@ -26,12 +27,12 @@ func main() {
 	person.Age = 18
 	person.Parent = parent
 
-	//params := make(map[string][]string)
-	//params["name"] = []string{"张三"}
-	//params["age"] = []string{"20"}
+	// params := make(map[string][]string)
+	// params["name"] = []string{"张三"}
+	// params["age"] = []string{"20"}
 	//
-	//parser.Unmarshal(person, params)
-	//fmt.Println(person)
+	// parser.Unmarshal(person, params)
+	// fmt.Println(person)
 
 	bytes, _ := json.Marshal(person)
 	fmt.Println("json: ", string(bytes))

@@ -22,7 +22,7 @@ func (h *h) RoundTrip(request *http.Request) (*http.Response, error) {
 // NewClient 创建统计数据的http client
 func NewClient(r http.RoundTripper) *http.Client {
 	if r == nil {
-		//r = http.DefaultTransport
+		// r = http.DefaultTransport
 		r = &http.Transport{}
 	}
 

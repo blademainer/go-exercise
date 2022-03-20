@@ -49,10 +49,10 @@ func (m *MapType) ConvertMapTypeTo(i interface{}) (e error) {
 }
 
 func main() {
-	//m := make(map[string]string)
-	//m["cc"] = "asdf"
-	//m["d"] = "a"
-	//m["z"] = "d"
+	// m := make(map[string]string)
+	// m["cc"] = "asdf"
+	// m["d"] = "a"
+	// m["z"] = "d"
 	m := &C{Name: "zhangsan", Age: 18}
 	interfaceType := InterfaceType{"a", m}
 	bytes, e := json.Marshal(interfaceType)

@@ -1,13 +1,12 @@
 package main
 
 import (
-	"fmt"
+	"crypto/tls"
 	"crypto/x509"
+	"fmt"
 	"io/ioutil"
 	"net/http"
-	"crypto/tls"
 )
-
 
 type myhandler struct {
 }
@@ -64,5 +63,3 @@ func main() {
 	// 	panic(err)
 	// }
 }
-
-

@@ -33,4 +33,3 @@ func (c Coders) Funcs() []string {
 	}
 	return rs
 }
-

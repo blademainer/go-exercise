@@ -30,10 +30,10 @@ func marshalerEncoder(e *encodeState, v reflect.Value, opts *Parser) {
 	}
 	s, err := m.Marshal()
 	b := []byte(s)
-	//if err == nil {
+	// if err == nil {
 	//	// copy JSON into buffer, checking validity.
 	//	err = compact(&e.Buffer, b, opts.Escape)
-	//}
+	// }
 	if err != nil {
 		e.error(&MarshalerError{v.Type(), err})
 	}
@@ -49,10 +49,10 @@ func addrMarshalerEncoder(e *encodeState, v reflect.Value, _ *Parser) {
 	}
 	m := va.Interface().(Marshaler)
 	s, err := m.Marshal()
-	//if err == nil {
+	// if err == nil {
 	//	// copy JSON into buffer, checking validity.
 	//	err = compact(&e.Buffer, b, true)
-	//}
+	// }
 	if err != nil {
 		e.error(&MarshalerError{v.Type(), err})
 	}
@@ -306,7 +306,7 @@ func (se *structEncoder) encode(e *encodeState, v reflect.Value, opts *Parser) {
 		}
 		e.string(f.name, opts.Escape)
 		e.WriteByte(opts.PairDelimiter)
-		//opts.Quoted = f.quoted
+		// opts.Quoted = f.quoted
 		fieldEncoderFunc := se.fieldEncs[i]
 		fieldEncoderFunc(e, fv, opts)
 	}
@@ -686,7 +686,7 @@ func typeFields(t reflect.Type, p Parser) []field {
 
 				// Only strings, floats, integers, and booleans can be quoted.
 				quoted := false
-				//if opts.Contains("string") {
+				// if opts.Contains("string") {
 				//	switch ft.Kind() {
 				//	case reflect.Bool,
 				//		reflect.Int, reflect.Int8, reflect.Int16, reflect.Int32, reflect.Int64,
@@ -695,7 +695,7 @@ func typeFields(t reflect.Type, p Parser) []field {
 				//		reflect.String:
 				//		quoted = true
 				//	}
-				//}
+				// }
 
 				// Record found field and index sequence.
 				if name != "" || !sf.Anonymous || ft.Kind() != reflect.Struct {
@@ -703,14 +703,18 @@ func typeFields(t reflect.Type, p Parser) []field {
 					if name == "" {
 						name = sf.Name
 					}
-					fields = append(fields, fillField(field{
-						name:      name,
-						tag:       tagged,
-						index:     index,
-						typ:       ft,
-						omitEmpty: opts.Contains("omitempty"),
-						quoted:    quoted,
-					}))
+					fields = append(
+						fields, fillField(
+							field{
+								name:      name,
+								tag:       tagged,
+								index:     index,
+								typ:       ft,
+								omitEmpty: opts.Contains("omitempty"),
+								quoted:    quoted,
+							},
+						),
+					)
 					if count[f.typ] > 1 {
 						// If there were multiple instances, add a second,
 						// so that the annihilation code will see a duplicate.
@@ -730,22 +734,24 @@ func typeFields(t reflect.Type, p Parser) []field {
 		}
 	}
 
-	sort.Slice(fields, func(i, j int) bool {
-		x := fields
-		// sort field by name, breaking ties with depth, then
-		// breaking ties with "name came from json tag", then
-		// breaking ties with index sequence.
-		if x[i].name != x[j].name {
-			return x[i].name < x[j].name
-		}
-		if len(x[i].index) != len(x[j].index) {
-			return len(x[i].index) < len(x[j].index)
-		}
-		if x[i].tag != x[j].tag {
-			return x[i].tag
-		}
-		return byIndex(x).Less(i, j)
-	})
+	sort.Slice(
+		fields, func(i, j int) bool {
+			x := fields
+			// sort field by name, breaking ties with depth, then
+			// breaking ties with "name came from json tag", then
+			// breaking ties with index sequence.
+			if x[i].name != x[j].name {
+				return x[i].name < x[j].name
+			}
+			if len(x[i].index) != len(x[j].index) {
+				return len(x[i].index) < len(x[j].index)
+			}
+			if x[i].tag != x[j].tag {
+				return x[i].tag
+			}
+			return byIndex(x).Less(i, j)
+		},
+	)
 
 	// Delete all fields that are hidden by the Go rules for embedded fields,
 	// except that fields with JSON tags are promoted.

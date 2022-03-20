@@ -26,7 +26,7 @@ func (config *AConfig) SetAddress(address string) (c *AConfig) {
 	return
 }
 
-func (*AConfig) Done(){
+func (*AConfig) Done() {
 	fmt.Println("done config.")
 }
 

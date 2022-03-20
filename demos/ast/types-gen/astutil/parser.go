@@ -5,6 +5,7 @@ import (
 	"go/ast"
 	"go/token"
 	"go/types"
+
 	"golang.org/x/tools/go/packages"
 )
 
@@ -72,24 +73,26 @@ func (p Parser) Printf(format string, args ...interface{}) {
 func (p Parser) findInterfaceType(interfaceName string) (interfaceType *ast.InterfaceType) {
 	for _, file := range p.p.Syntax {
 		p.Printf("find interface: %v in file: %v", interfaceName, file.Name.Name)
-		ast.Inspect(file, func(node ast.Node) bool {
-			decl, ok := node.(*ast.GenDecl)
-			if !ok || decl.Tok != token.TYPE {
+		ast.Inspect(
+			file, func(node ast.Node) bool {
+				decl, ok := node.(*ast.GenDecl)
+				if !ok || decl.Tok != token.TYPE {
+					return true
+				}
+				for _, spec := range decl.Specs {
+					tspec := spec.(*ast.TypeSpec) // Guaranteed to succeed as this is CONST.
+					if tspec.Name.Name != interfaceName {
+						continue
+					}
+					itype, ok := tspec.Type.(*ast.InterfaceType)
+					if ok {
+						interfaceType = itype
+						return false
+					}
+				}
 				return true
-			}
-			for _, spec := range decl.Specs {
-				tspec := spec.(*ast.TypeSpec) // Guaranteed to succeed as this is CONST.
-				if tspec.Name.Name != interfaceName {
-					continue
-				}
-				itype, ok := tspec.Type.(*ast.InterfaceType)
-				if ok {
-					interfaceType = itype
-					return false
-				}
-			}
-			return true
-		})
+			},
+		)
 	}
 	return
 }
@@ -99,37 +102,39 @@ func (p Parser) findType(typeName string) (tp *ast.TypeSpec) {
 		if tp != nil {
 			return tp
 		}
-		ast.Inspect(file, func(node ast.Node) bool {
-			decl, ok := node.(*ast.GenDecl)
-			if !ok || decl.Tok != token.TYPE {
-				// We only care about const declarations.
+		ast.Inspect(
+			file, func(node ast.Node) bool {
+				decl, ok := node.(*ast.GenDecl)
+				if !ok || decl.Tok != token.TYPE {
+					// We only care about const declarations.
+					return true
+				}
+				// The name of the type of the constants we are declaring.
+				// Can change if this is a multi-element declaration.
+				// typ := ""
+				// Loop over the elements of the declaration. Each element is a ValueSpec:
+				// a list of names possibly followed by a type, possibly followed by values.
+				// If the type and value are both missing, we carry down the type (and value,
+				// but the "go/types" package takes care of that).
+				for _, spec := range decl.Specs {
+					tspec, ok := spec.(*ast.TypeSpec) // Guaranteed to succeed as this is Type.
+					if !ok {
+						continue
+					}
+					obj, ok := p.pkg.defs[tspec.Name]
+					if !ok {
+						p.Printf("not found ident: %v in this package: %v\n", tspec.Name, p.p)
+						continue
+					}
+					p.Printf("find type: %v in this package: %v", obj.Id(), p.p)
+					if tspec.Name.Name == typeName {
+						tp = tspec
+						return false
+					}
+				}
 				return true
-			}
-			// The name of the type of the constants we are declaring.
-			// Can change if this is a multi-element declaration.
-			//typ := ""
-			// Loop over the elements of the declaration. Each element is a ValueSpec:
-			// a list of names possibly followed by a type, possibly followed by values.
-			// If the type and value are both missing, we carry down the type (and value,
-			// but the "go/types" package takes care of that).
-			for _, spec := range decl.Specs {
-				tspec, ok := spec.(*ast.TypeSpec) // Guaranteed to succeed as this is Type.
-				if !ok {
-					continue
-				}
-				obj, ok := p.pkg.defs[tspec.Name]
-				if !ok {
-					p.Printf("not found ident: %v in this package: %v\n", tspec.Name, p.p)
-					continue
-				}
-				p.Printf("find type: %v in this package: %v", obj.Id(), p.p)
-				if tspec.Name.Name == typeName {
-					tp = tspec
-					return false
-				}
-			}
-			return true
-		})
+			},
+		)
 	}
 	return tp
 }

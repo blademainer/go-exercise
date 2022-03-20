@@ -2,8 +2,9 @@ package astutil
 
 import (
 	"fmt"
-	"golang.org/x/tools/go/packages"
 	"testing"
+
+	"golang.org/x/tools/go/packages"
 )
 
 type Intface interface {
@@ -33,10 +34,10 @@ func TestIsTypeImplementsInterface(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	//if len(pkgs) != 1 {
+	// if len(pkgs) != 1 {
 	//	t.Fatalf("error: %d packages found, packages: %#v", len(pkgs), pkgs)
-	//}
-	//pkg := pkgs[0]
+	// }
+	// pkg := pkgs[0]
 	for _, pkg := range pkgs {
 		fmt.Println(pkg.Name)
 		p := NewParser(pkg)

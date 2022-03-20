@@ -43,7 +43,7 @@ func main() {
 		New("test").
 		Funcs(funcMap).
 		Parse(" Hello {{ .Name }}")
-	if err != nil{
+	if err != nil {
 		log.Printf(err.Error())
 	}
 	err = tmpl.Execute(os.Stderr, kv)

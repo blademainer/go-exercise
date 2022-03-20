@@ -3,22 +3,23 @@ package main
 import (
 	"flag"
 	"fmt"
-	"github.com/prometheus/client_golang/prometheus"
-	"github.com/prometheus/client_golang/prometheus/promhttp"
 	"log"
 	"math/rand"
 	"net/http"
 	"strconv"
 	"time"
+
+	"github.com/prometheus/client_golang/prometheus"
+	"github.com/prometheus/client_golang/prometheus/promhttp"
 )
 
 var (
 	uniformDomain = flag.Float64(
 		"uniform.domain", 0.0002, "The domain for the uniform distribution.",
 	)
-	normDomain    = flag.Float64("normal.domain", 0.0002, "The domain for the normal distribution.")
-	normMean      = flag.Float64("normal.mean", 0.00001, "The mean for the normal distribution.")
-	histogram     = prometheus.NewHistogramVec(
+	normDomain = flag.Float64("normal.domain", 0.0002, "The domain for the normal distribution.")
+	normMean   = flag.Float64("normal.mean", 0.00001, "The mean for the normal distribution.")
+	histogram  = prometheus.NewHistogramVec(
 		prometheus.HistogramOpts{
 			Namespace: "default",
 			Subsystem: "go_exercise",

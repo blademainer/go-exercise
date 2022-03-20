@@ -6,8 +6,6 @@ type CacheResolver struct {
 	net.Resolver
 }
 
-
-
 func main() {
-	net.DefaultResolver = &CacheResolver{}
+	net.DefaultResolver = &net.Resolver{}
 }

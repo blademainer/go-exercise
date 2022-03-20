@@ -11,8 +11,8 @@ import (
 type Coder string
 
 type (
-	json       Coder // 将obj解析为json字符串
-	xml        Coder // 将obj解析为xml字符串
+	json Coder // 将obj解析为json字符串
+	xml  Coder // 将obj解析为xml字符串
 )
 
 func (j json) Marshal(v interface{}) (string, error) {
@@ -32,4 +32,3 @@ func (x xml) Marshal(v interface{}) (string, error) {
 func (x xml) Unmarshal(data string, v interface{}) error {
 	return xmlc.Unmarshal([]byte(data), v)
 }
-

@@ -2,8 +2,9 @@ package main
 
 import (
 	"fmt"
-	locksync "github.com/blademainer/go-exercise/demos/lock/sync"
 	"sync"
+
+	locksync "github.com/blademainer/go-exercise/demos/lock/sync"
 )
 
 func main() {
@@ -18,7 +19,8 @@ func main() {
 			k := sum % 10
 			go func() {
 				exists := -1
-				locksync.Do(rw,
+				locksync.Do(
+					rw,
 					func() bool {
 						var found bool
 						exists, found = a[k]

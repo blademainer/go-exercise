@@ -1,9 +1,9 @@
 package main
 
 import (
-	"sync/atomic"
-	"sync"
 	"fmt"
+	"sync"
+	"sync/atomic"
 )
 
 type P struct {
@@ -17,7 +17,7 @@ type fieldCache struct {
 	mu    sync.Mutex   // used only by writers
 }
 
-func (p *P) Process(){
+func (p *P) Process() {
 	fmt.Printf("Process &p: %p \n", p)
 	printAndReadFields(*p)
 }
@@ -31,7 +31,6 @@ func printAndReadFields(p P) {
 	}
 	// update cache...
 }
-
 
 func main() {
 	p := &P{}

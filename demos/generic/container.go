@@ -1,8 +1,10 @@
 package generic
 
 type Number interface {
-	int64 | float64 | int
+	int64 | ~float64 | ~int
 }
+
+type IntType int
 
 // SumIntOrFloat sum of map
 func SumIntOrFloat[K comparable, V int | float64](m map[K]V) V {

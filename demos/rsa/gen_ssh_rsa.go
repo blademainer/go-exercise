@@ -5,9 +5,10 @@ import (
 	"crypto/rsa"
 	"crypto/x509"
 	"encoding/pem"
-	"golang.org/x/crypto/ssh"
 	"io/ioutil"
 	"log"
+
+	"golang.org/x/crypto/ssh"
 )
 
 func main() {
@@ -21,7 +22,7 @@ func main() {
 	}
 
 	publicKeyBytes, err := generatePublicKey(&privateKey.PublicKey)
-	//publicKeyBytes := encodePublicKeyToPEM(&privateKey.PublicKey)
+	// publicKeyBytes := encodePublicKeyToPEM(&privateKey.PublicKey)
 	if err != nil {
 		log.Fatal(err.Error())
 	}

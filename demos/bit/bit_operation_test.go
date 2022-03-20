@@ -22,11 +22,13 @@ func TestIsDirectory(t *testing.T) {
 		{"ALL", args{DIRECTORY | READ | WRITE | EXECUTE | FILE}, true},
 	}
 	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			if got := IsDirectory(tt.args.flags); got != tt.want {
-				t.Errorf("IsDirectory() = %v, want %v", got, tt.want)
-			}
-		})
+		t.Run(
+			tt.name, func(t *testing.T) {
+				if got := IsDirectory(tt.args.flags); got != tt.want {
+					t.Errorf("IsDirectory() = %v, want %v", got, tt.want)
+				}
+			},
+		)
 	}
 }
 
@@ -47,11 +49,13 @@ func TestIsExecute(t *testing.T) {
 		{"ALL", args{DIRECTORY | READ | WRITE | EXECUTE | FILE}, true},
 	}
 	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			if got := IsExecute(tt.args.flags); got != tt.want {
-				t.Errorf("IsExecute() = %v, want %v", got, tt.want)
-			}
-		})
+		t.Run(
+			tt.name, func(t *testing.T) {
+				if got := IsExecute(tt.args.flags); got != tt.want {
+					t.Errorf("IsExecute() = %v, want %v", got, tt.want)
+				}
+			},
+		)
 	}
 }
 
@@ -72,11 +76,13 @@ func TestIsFile(t *testing.T) {
 		{"ALL", args{DIRECTORY | READ | WRITE | EXECUTE | FILE}, true},
 	}
 	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			if got := IsFile(tt.args.flags); got != tt.want {
-				t.Errorf("IsFile() = %v, want %v", got, tt.want)
-			}
-		})
+		t.Run(
+			tt.name, func(t *testing.T) {
+				if got := IsFile(tt.args.flags); got != tt.want {
+					t.Errorf("IsFile() = %v, want %v", got, tt.want)
+				}
+			},
+		)
 	}
 }
 
@@ -97,11 +103,13 @@ func TestIsRead(t *testing.T) {
 		{"ALL", args{DIRECTORY | READ | WRITE | EXECUTE | FILE}, true},
 	}
 	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			if got := IsRead(tt.args.flags); got != tt.want {
-				t.Errorf("IsRead() = %v, want %v", got, tt.want)
-			}
-		})
+		t.Run(
+			tt.name, func(t *testing.T) {
+				if got := IsRead(tt.args.flags); got != tt.want {
+					t.Errorf("IsRead() = %v, want %v", got, tt.want)
+				}
+			},
+		)
 	}
 }
 
@@ -124,10 +132,12 @@ func TestIsWrite(t *testing.T) {
 	fmt.Println(DIRECTORY | READ | WRITE | EXECUTE | FILE)
 	fmt.Println(DIRECTORY)
 	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			if got := IsWrite(tt.args.flags); got != tt.want {
-				t.Errorf("IsWrite() = %v, want %v", got, tt.want)
-			}
-		})
+		t.Run(
+			tt.name, func(t *testing.T) {
+				if got := IsWrite(tt.args.flags); got != tt.want {
+					t.Errorf("IsWrite() = %v, want %v", got, tt.want)
+				}
+			},
+		)
 	}
 }

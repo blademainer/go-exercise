@@ -1,39 +1,39 @@
 package collection
 
-func Init() *List {
-	header := &Entry{nil, nil, nil}
+func New[T Element]() *List[T] {
+	header := &Entry[T]{}
 	header.pre = header
 	header.next = header
-	list := &List{header, header, 0}
+	list := &List[T]{header, header, 0}
 	return list
 }
 
-func insertBefore(entry *Entry, element interface{}) {
-	cur := &Entry{entry.pre, entry, element}
+func insertBefore[T Element](entry *Entry[T], element T) {
+	cur := &Entry[T]{entry.pre, entry, element}
 	entry.pre.next = cur
 	entry.pre = cur
 }
 
-func appendTo(entry *Entry, element interface{}) {
-	cur := &Entry{entry, entry.next, element}
+func appendTo[T Element](entry *Entry[T], element T) {
+	cur := &Entry[T]{entry, entry.next, element}
 	entry.next.pre = cur
 	entry.next = cur
 }
 
-func (list *List) Insert(t interface{}) {
+func (list *List[T]) Insert(t T) {
 	appendTo(list.Header, t)
 	list.Size++
 }
 
-func (list *List) Add(t interface{}) {
+func (list *List[T]) Add(t T) {
 	insertBefore(list.Tail, t)
 	list.Size++
 }
 
-func (list *List) First() interface{} {
+func (list *List[T]) First() T {
 	return list.Header.next.Value
 }
 
-func (list *List) Last() interface{} {
+func (list *List[T]) Last() T {
 	return list.Tail.pre.Value
 }

@@ -1,10 +1,10 @@
 package main
 
 import (
+	"encoding/json"
+	"errors"
 	"fmt"
 	"reflect"
-	"errors"
-	"encoding/json"
 )
 
 func a(s []string) {
@@ -20,7 +20,7 @@ func InitType(i interface{}) interface{} {
 	v := reflect.ValueOf(i)
 	typeOf := reflect.TypeOf(i)
 	value := reflect.New(typeOf)
-	//reflect.Copy(v, value)
+	// reflect.Copy(v, value)
 	fmt.Printf("Value: %T Type: %T new Type: %T \n", v, typeOf, reflect.TypeOf(value))
 	return value
 }

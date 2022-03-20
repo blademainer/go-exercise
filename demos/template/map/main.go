@@ -49,11 +49,13 @@ func Init() {
 	var err error
 	tmpl, err = template.
 		New("test.gohtml").
-		Funcs(template.FuncMap{
-			"multiAge": func(person Person) int {
-				return person.Age * 2
+		Funcs(
+			template.FuncMap{
+				"multiAge": func(person Person) int {
+					return person.Age * 2
+				},
 			},
-		}).
+		).
 		ParseFiles(abs)
 	if err != nil {
 		panic(err.Error())

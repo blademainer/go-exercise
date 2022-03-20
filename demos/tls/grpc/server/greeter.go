@@ -5,14 +5,15 @@ import (
 	"crypto/tls"
 	"crypto/x509"
 	"fmt"
-	testdata "github.com/blademainer/go-exercise/demos/tls/key"
-	"google.golang.org/grpc"
-	"google.golang.org/grpc/credentials"
-	pb "google.golang.org/grpc/examples/helloworld/helloworld"
 	"io/ioutil"
 	"log"
 	"net"
 	"sync"
+
+	testdata "github.com/blademainer/go-exercise/demos/tls/key"
+	"google.golang.org/grpc"
+	"google.golang.org/grpc/credentials"
+	pb "google.golang.org/grpc/examples/helloworld/helloworld"
 )
 
 // server is used to implement helloworld.GreeterServer.
@@ -31,11 +32,11 @@ func main() {
 		defer wg.Done()
 		main1()
 	}()
-	//wg.Add(1)
-	//go func() {
+	// wg.Add(1)
+	// go func() {
 	//	defer wg.Done()
 	//	main2() // bad
-	//}()
+	// }()
 	wg.Wait()
 }
 
@@ -87,12 +88,13 @@ func main2() {
 		return
 	}
 
-	creds := credentials.NewTLS(&tls.Config{
-		ClientAuth:   tls.RequireAndVerifyClientCert,
-		Certificates: []tls.Certificate{certificate},
-		ClientCAs:    pool,
-
-	})
+	creds := credentials.NewTLS(
+		&tls.Config{
+			ClientAuth:   tls.RequireAndVerifyClientCert,
+			Certificates: []tls.Certificate{certificate},
+			ClientCAs:    pool,
+		},
+	)
 	gs := grpc.NewServer(grpc.Creds(creds))
 	pb.RegisterGreeterServer(gs, &server{})
 	panic(gs.Serve(lis))

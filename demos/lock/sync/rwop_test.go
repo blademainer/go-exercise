@@ -18,7 +18,8 @@ func TestDo(t *testing.T) {
 			k := sum % 10
 			go func() {
 				exists := -1
-				Do(rw,
+				Do(
+					rw,
 					func() bool {
 						var found bool
 						exists, found = a[k]
@@ -51,7 +52,8 @@ func TestDo2(t *testing.T) {
 				v := i + j
 				exists := -1
 
-				Do(rw,
+				Do(
+					rw,
 					func() bool {
 						var found bool
 						exists, found = a[k]
@@ -115,7 +117,8 @@ func TestDo4(t *testing.T) {
 		go func() {
 			for j := 0; j < 100; j++ {
 				// bad
-				Do(rw,
+				Do(
+					rw,
 					func() bool {
 						fmt.Println(sum)
 						return true
@@ -142,11 +145,13 @@ func TestDo5(t *testing.T) {
 		wg.Add(100)
 		go func() {
 			for j := 0; j < 100; j++ {
-				//rw.Lock()
-				DoFunc(rw, func() {
-					sum++
-				})
-				//rw.Unlock()
+				// rw.Lock()
+				DoFunc(
+					rw, func() {
+						sum++
+					},
+				)
+				// rw.Unlock()
 				wg.Done()
 			}
 		}()

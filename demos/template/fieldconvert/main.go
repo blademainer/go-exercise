@@ -19,8 +19,8 @@ func (i *a) SetAge(age int) error {
 	return nil
 }
 
-func (i *a) Mul(a, b int) int{
-	return a*b
+func (i *a) Mul(a, b int) int {
+	return a * b
 }
 
 func main() {

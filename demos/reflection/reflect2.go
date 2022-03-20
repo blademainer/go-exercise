@@ -1,13 +1,16 @@
 package main
 
 import (
-	"reflect"
-	"fmt"
 	"encoding/json"
+	"fmt"
+	"reflect"
 )
 
 func printType(t reflect.Type) {
-	fmt.Printf("instance: %v valueOf: %v type: %T typeOfValue: %T, kind: %v \n", t, reflect.ValueOf(t), t, reflect.TypeOf(reflect.ValueOf(t)), reflect.TypeOf(t).Kind())
+	fmt.Printf(
+		"instance: %v valueOf: %v type: %T typeOfValue: %T, kind: %v \n", t, reflect.ValueOf(t), t,
+		reflect.TypeOf(reflect.ValueOf(t)), reflect.TypeOf(t).Kind(),
+	)
 }
 
 func jsonCopy(origin interface{}, target interface{}) {
@@ -16,8 +19,7 @@ func jsonCopy(origin interface{}, target interface{}) {
 	json.Unmarshal(bytes, target)
 }
 
-
-func structCopy(origin interface{}){
+func structCopy(origin interface{}) {
 
 }
 
@@ -31,7 +33,7 @@ func main() {
 	typ := reflect.TypeOf(reflect.TypeOf(s))
 	if typ.Kind() == reflect.Ptr {
 		fmt.Println("is pointer!!")
-		//fmt.Printf("ele: %v  valid: %s field: %v \n ", typ, typ.String(), typ.NumField())
+		// fmt.Printf("ele: %v  valid: %s field: %v \n ", typ, typ.String(), typ.NumField())
 		printType(typ)
 		typ = typ.Elem()
 		typ = reflect.TypeOf(s)
@@ -63,5 +65,8 @@ func main() {
 	fmt.Println("i2: ", i2.String())
 	fmt.Printf("origin: %s ele: %s ele.value: %v \n", i, i.Elem().String(), i.Kind())
 
-	fmt.Printf("instance: %v valueOf: %v type: %T typeOfValue: %T copyOfType: %T pointerOfType: %v \n", s, v, typ, vType, value, pointer)
+	fmt.Printf(
+		"instance: %v valueOf: %v type: %T typeOfValue: %T copyOfType: %T pointerOfType: %v \n", s, v, typ, vType,
+		value, pointer,
+	)
 }

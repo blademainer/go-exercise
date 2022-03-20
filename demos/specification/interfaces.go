@@ -27,6 +27,6 @@ func Start(handler Handler, channel *Channel) {
 func main() {
 	channel := &AChannel{}
 	fmt.Printf("AChannel type: %T, Channel type: %T \n", channel, &Channel{""})
-	//channel.FuncA("pppp")
+	// channel.FuncA("pppp")
 	Start(channel, &Channel{""})
 }

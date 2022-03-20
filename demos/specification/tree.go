@@ -2,16 +2,17 @@ package main
 
 import (
 	"fmt"
+
 	"golang.org/x/tour/tree"
 )
 
 func walkImpl(t *tree.Tree, ch chan int) {
-	//if t == nil {
+	// if t == nil {
 	//	return
-	//}
-	//walkImpl(t.Left, ch)
-	//ch <- t.Value
-	//walkImpl(t.Right, ch)
+	// }
+	// walkImpl(t.Left, ch)
+	// ch <- t.Value
+	// walkImpl(t.Right, ch)
 	if t.Left != nil {
 		walkImpl(t.Left, ch)
 	}

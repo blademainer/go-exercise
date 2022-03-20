@@ -3,9 +3,10 @@ package main
 import (
 	"crypto/tls"
 	"fmt"
-	tls2 "github.com/blademainer/go-exercise/demos/tls/tcp/tls"
 	"io/ioutil"
 	"net"
+
+	tls2 "github.com/blademainer/go-exercise/demos/tls/tcp/tls"
 )
 
 func main() {

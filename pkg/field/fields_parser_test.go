@@ -2,9 +2,10 @@ package field
 
 import (
 	"fmt"
-	"github.com/coreos/etcd/pkg/testutil"
 	"strings"
 	"testing"
+
+	"github.com/coreos/etcd/pkg/testutil"
 )
 
 type Person struct {
@@ -72,7 +73,9 @@ func TestIgnoreEmptyValue(t *testing.T) {
 }
 
 func TestSort(t *testing.T) {
-	parser := Parser{IgnoreNilValueField: true, Sort: true, Tag: "form", Escape: true, GroupDelimiter: '&', PairDelimiter: '='}
+	parser := Parser{
+		IgnoreNilValueField: true, Sort: true, Tag: "form", Escape: true, GroupDelimiter: '&', PairDelimiter: '=',
+	}
 	person := &Person{Age: 18, Name: "张三"}
 	if b, e := parser.Marshal(person); e == nil {
 		s := string(b)

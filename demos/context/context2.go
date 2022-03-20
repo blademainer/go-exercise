@@ -9,7 +9,6 @@ import (
 
 var wg2 = sync.WaitGroup{}
 
-
 func main() {
 	ints := make(chan int, 1024)
 	go func() {

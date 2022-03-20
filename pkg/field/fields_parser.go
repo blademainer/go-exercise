@@ -42,8 +42,10 @@ type (
 )
 
 func (b *Parser) String() string {
-	return fmt.Sprintf("Tag: \"%s\", Escape: %v, Quoted: %v, GroupDelimiter: \"%s\", PairDelimiter: \"%s\", Sort: %v, IgnoreNilValueField: %v \n",
-		b.Tag, b.Escape, b.Quoted, string(b.GroupDelimiter), string(b.PairDelimiter), b.Sort, b.IgnoreNilValueField)
+	return fmt.Sprintf(
+		"Tag: \"%s\", Escape: %v, Quoted: %v, GroupDelimiter: \"%s\", PairDelimiter: \"%s\", Sort: %v, IgnoreNilValueField: %v \n",
+		b.Tag, b.Escape, b.Quoted, string(b.GroupDelimiter), string(b.PairDelimiter), b.Sort, b.IgnoreNilValueField,
+	)
 }
 
 var (
@@ -53,7 +55,8 @@ var (
 		GroupDelimiter:      '&',
 		PairDelimiter:       '=',
 		Sort:                false,
-		IgnoreNilValueField: true}
+		IgnoreNilValueField: true,
+	}
 	HTTP_FORM_PARSER = &Parser{
 		Tag:                 "form",
 		Escape:              false,

@@ -15,10 +15,10 @@ func Rune() {
 	fmt.Println(runes)
 }
 
-func Sum(){
-	//h := md5.New()
-	//h.Write([]byte(words)) // 需要加密的字符串为 123456
-	//cipherStr := h.Sum(nil)
+func Sum() {
+	// h := md5.New()
+	// h.Write([]byte(words)) // 需要加密的字符串为 123456
+	// cipherStr := h.Sum(nil)
 	cipherStr := md5.Sum([]byte(words))
 	fmt.Printf("%s\n", hex.EncodeToString(cipherStr[:]))
 }

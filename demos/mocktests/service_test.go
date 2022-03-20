@@ -1,9 +1,10 @@
 package mock
 
 import (
-	"github.com/golang/mock/gomock"
 	"reflect"
 	"testing"
+
+	"github.com/golang/mock/gomock"
 )
 
 func Test_aImpl_Hello(t *testing.T) {
@@ -44,18 +45,20 @@ func Test_aImpl_Hello(t *testing.T) {
 		},
 	}
 	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			a := &aImpl{
-				UserRepository: tt.fields.UserRepository,
-			}
-			got, err := a.Hello(tt.args.id)
-			if (err != nil) != tt.wantErr {
-				t.Errorf("Hello() error = %v, wantErr %v", err, tt.wantErr)
-				return
-			}
-			if !reflect.DeepEqual(got, tt.want) {
-				t.Errorf("Hello() got = %v, want %v", got, tt.want)
-			}
-		})
+		t.Run(
+			tt.name, func(t *testing.T) {
+				a := &aImpl{
+					UserRepository: tt.fields.UserRepository,
+				}
+				got, err := a.Hello(tt.args.id)
+				if (err != nil) != tt.wantErr {
+					t.Errorf("Hello() error = %v, wantErr %v", err, tt.wantErr)
+					return
+				}
+				if !reflect.DeepEqual(got, tt.want) {
+					t.Errorf("Hello() got = %v, want %v", got, tt.want)
+				}
+			},
+		)
 	}
 }

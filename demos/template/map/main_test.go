@@ -52,10 +52,12 @@ Say: Hello, my name is Wangwu`,
 		},
 	}
 	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			if got := ExecuteData(tt.args.data); got != tt.want {
-				t.Errorf("ExecuteData() = %v, want %v", got, tt.want)
-			}
-		})
+		t.Run(
+			tt.name, func(t *testing.T) {
+				if got := ExecuteData(tt.args.data); got != tt.want {
+					t.Errorf("ExecuteData() = %v, want %v", got, tt.want)
+				}
+			},
+		)
 	}
 }

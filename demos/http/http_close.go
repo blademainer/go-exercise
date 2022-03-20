@@ -2,21 +2,22 @@ package main
 
 import (
 	"fmt"
-	"github.com/weaveworks/procspy"
 	"net/http"
 	"os"
 	"sync"
 	"time"
+
+	"github.com/weaveworks/procspy"
 )
 
 func main() {
 	getpid := os.Getpid()
 	fmt.Println("Pid: ", getpid)
 
-	wg:=sync.WaitGroup{}
+	wg := sync.WaitGroup{}
 
 	for i := 0; i < 1000; i++ {
-		for j := 0; j < 10; j++  {
+		for j := 0; j < 10; j++ {
 			wg.Add(1)
 			go func() {
 				defer wg.Done()
@@ -25,11 +26,11 @@ func main() {
 					fmt.Println("Error: ", err.Error())
 					return
 				}
-				//if bytes, e := ioutil.ReadAll(resp.Body); e != nil {
+				// if bytes, e := ioutil.ReadAll(resp.Body); e != nil {
 				//	fmt.Println("Error: ", e.Error())
-				//} else {
+				// } else {
 				//	fmt.Println(len(bytes))
-				//}
+				// }
 				resp.Body.Close()
 				time.Sleep(100 * time.Second)
 			}()
@@ -38,10 +39,8 @@ func main() {
 
 	wg.Wait()
 
-	//connections()
+	// connections()
 }
-
-
 
 func connections() {
 	lookupProcesses := true

@@ -22,7 +22,7 @@ func server(threadSize uint8, fs chan func()) {
 	done := make(chan bool)
 	for {
 		f := <-fs
-		//fmt.Printf("current: %d >= max: %d \n", i, threadSize)
+		// fmt.Printf("current: %d >= max: %d \n", i, threadSize)
 		fmt.Printf("index: %d fs=== %s \n", i, f)
 		go run(f, done)
 		i++

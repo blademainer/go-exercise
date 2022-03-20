@@ -6,12 +6,12 @@ import (
 )
 
 type In struct {
-	Code int `json:"code"`
-	CodePtr *int `json:"code_ptr"`
+	Code    int    `json:"code"`
+	CodePtr *int   `json:"code_ptr"`
 	Message string `json:"message"`
 }
 
-func prin(i *In){
+func prin(i *In) {
 	bytes, _ := json.Marshal(i)
 	fmt.Println(string(bytes))
 

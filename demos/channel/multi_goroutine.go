@@ -12,7 +12,7 @@ func main() {
 
 	dataCh := make(chan int, 100)
 	closeCh := make(chan bool, 2)
-	//doneCh := make(chan bool, 1024)
+	// doneCh := make(chan bool, 1024)
 	go func() {
 		for i := 0; i < 10000; i++ {
 			dataCh <- i
@@ -20,8 +20,8 @@ func main() {
 		fmt.Println("Done...")
 		closeCh <- true
 		closeCh <- true
-		//wg.Done()
-		//close(dataCh)
+		// wg.Done()
+		// close(dataCh)
 	}()
 
 	count := int32(0)

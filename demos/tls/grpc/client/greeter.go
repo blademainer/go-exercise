@@ -6,12 +6,13 @@ import (
 	"crypto/x509"
 	"errors"
 	"fmt"
-	testdata "github.com/blademainer/go-exercise/demos/tls/key"
-	"google.golang.org/grpc/credentials"
 	"io/ioutil"
 	"log"
 	"os"
 	"time"
+
+	testdata "github.com/blademainer/go-exercise/demos/tls/key"
+	"google.golang.org/grpc/credentials"
 
 	"google.golang.org/grpc"
 	pb "google.golang.org/grpc/examples/helloworld/helloworld"
@@ -19,13 +20,13 @@ import (
 
 const (
 	address     = "localhost:50051"
-	address2     = "localhost:50052"
+	address2    = "localhost:50052"
 	defaultName = "world"
 )
 
 func main() {
 	main1()
-	//main2()
+	// main2()
 }
 
 func main1() {
@@ -33,7 +34,6 @@ func main1() {
 	if err != nil {
 		log.Fatalf("failed to load credentials: %v", err)
 	}
-
 
 	// Set up a connection to the server.
 	conn, err := grpc.Dial(address, grpc.WithTransportCredentials(creds))
@@ -43,11 +43,11 @@ func main1() {
 	defer conn.Close()
 
 	// Set up a connection to the server.
-	//conn, err := grpc.Dial(address, grpc.WithInsecure())
-	//if err != nil {
+	// conn, err := grpc.Dial(address, grpc.WithInsecure())
+	// if err != nil {
 	//	log.Fatalf("did not connect: %v", err)
-	//}
-	//defer conn.Close()
+	// }
+	// defer conn.Close()
 	c := pb.NewGreeterClient(conn)
 
 	// Contact the server and print out its response.
@@ -83,11 +83,13 @@ func main2() {
 		return
 	}
 
-	creds := credentials.NewTLS(&tls.Config{
-		ServerName:   "localhost",
-		Certificates: []tls.Certificate{cert},
-		RootCAs:      certPool,
-	})
+	creds := credentials.NewTLS(
+		&tls.Config{
+			ServerName:   "localhost",
+			Certificates: []tls.Certificate{cert},
+			RootCAs:      certPool,
+		},
+	)
 
 	// Set up a connection to the server.
 	conn, err := grpc.Dial(address2, grpc.WithTransportCredentials(creds))
@@ -97,11 +99,11 @@ func main2() {
 	defer conn.Close()
 
 	// Set up a connection to the server.
-	//conn, err := grpc.Dial(address, grpc.WithInsecure())
-	//if err != nil {
+	// conn, err := grpc.Dial(address, grpc.WithInsecure())
+	// if err != nil {
 	//	log.Fatalf("did not connect: %v", err)
-	//}
-	//defer conn.Close()
+	// }
+	// defer conn.Close()
 	c := pb.NewGreeterClient(conn)
 
 	// Contact the server and print out its response.

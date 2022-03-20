@@ -6,19 +6,19 @@ import (
 	"time"
 )
 
-//main.PrintStack()
+// main.PrintStack()
 //	/Volumes/ssddata/workspace/go/src/github.com/blademainer/go-exercise/demos/panic/reconver.go:11 +0x5b
-//main.process.func1()
+// main.process.func1()
 //	/Volumes/ssddata/workspace/go/src/github.com/blademainer/go-exercise/demos/panic/reconver.go:19 +0x7b
-//panic(0x10abca0, 0x1160520)
+// panic(0x10abca0, 0x1160520)
 //	/usr/local/go/src/runtime/panic.go:513 +0x1b9
-//main.(*A).ttt(0x0)
+// main.(*A).ttt(0x0)
 //	/Volumes/ssddata/workspace/go/src/github.com/blademainer/go-exercise/demos/panic/reconver.go:30 +0x4b
-//main.badFunc()
+// main.badFunc()
 //	/Volumes/ssddata/workspace/go/src/github.com/blademainer/go-exercise/demos/panic/reconver.go:35 +0x2a
-//main.process()
+// main.process()
 //	/Volumes/ssddata/workspace/go/src/github.com/blademainer/go-exercise/demos/panic/reconver.go:22 +0x3e
-//main.main()
+// main.main()
 //	/Volumes/ssddata/workspace/go/src/github.com/blademainer/go-exercise/demos/panic/reconver.go:39 +0x22
 func PrintStack() {
 	var buf [4096]byte

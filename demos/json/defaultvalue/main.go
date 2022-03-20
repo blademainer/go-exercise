@@ -13,7 +13,7 @@ func main() {
 	}
 	type b struct {
 		Name string `json:"name"`
-		Age  int `json:"age"`
+		Age  int    `json:"age"`
 	}
 
 	marshal, _ := json.Marshal(&a{})

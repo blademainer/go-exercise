@@ -1,9 +1,9 @@
 package main
 
 import (
-	"reflect"
-	"fmt"
 	"encoding/json"
+	"fmt"
+	"reflect"
 )
 
 func main() {
@@ -16,8 +16,8 @@ func main() {
 	i := CopyStruct(p)
 	j, _ := json.Marshal(p)
 	json.Unmarshal(j, i)
-	//name := np.FieldByName("name")
-	//fmt.Println("name ==== ", name)
+	// name := np.FieldByName("name")
+	// fmt.Println("name ==== ", name)
 	fmt.Printf("np==== %v type is: %v p: %v \n", i, reflect.TypeOf(i), p)
 
 	a := []P{{Name: "zhangsan"}, {Name: "lisi"}}
@@ -73,7 +73,7 @@ func initializeStruct(t reflect.Type, v reflect.Value) {
 			f.Set(reflect.MakeChan(ft.Type, 0))
 		case reflect.Struct:
 			initializeStruct(ft.Type, f)
-			//case reflect.Ptr:
+			// case reflect.Ptr:
 			//	fv := reflect.New(ft.Type.Elem())
 			//	initializeStruct(ft.Type.Elem(), fv.Elem())
 			//	f.Set(fv)

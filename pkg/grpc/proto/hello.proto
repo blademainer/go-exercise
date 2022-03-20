@@ -7,21 +7,21 @@ import "protoc-gen-swagger/options/annotations.proto";
 package proto;
 
 service CurlService {
-    rpc Curl (CurlRequest) returns (Response) {
-        option (google.api.http) = {
-          post : "/v1/curl"
-          body : "*"
-        };
-    }
+  rpc Curl (CurlRequest) returns (Response) {
+    option (google.api.http) = {
+      post : "/v1/curl"
+      body : "*"
+    };
+  }
 }
 
 
 message CurlRequest {
-    // 下载地址
-    string url = 1 [(validate.rules).string.uri = true];
+  // 下载地址
+  string url = 1 [(validate.rules).string.uri = true];
 }
 
 message Response {
-    // 数据
-    bytes data = 1;
+  // 数据
+  bytes data = 1;
 }

@@ -10,7 +10,6 @@ type store struct {
 	kv map[int]int
 }
 
-
 // maybe panic
 func (store *store) getOrInitWithoutRLock(k int, v int) int {
 	exists, found := store.kv[k]
