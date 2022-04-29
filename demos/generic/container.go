@@ -1,7 +1,12 @@
 package generic
 
+import (
+	"fmt"
+	"reflect"
+)
+
 type Number interface {
-	int64 | ~float64 | ~int
+	~string | ~int64 | ~float64 | ~int
 }
 
 type IntType int
@@ -22,4 +27,24 @@ func SumNumber[K comparable, V Number](m map[K]V) V {
 		s += v
 	}
 	return s
+}
+
+type Key interface {
+	~string | ~int32 | ~int64 | ~int
+}
+
+type Server[T Number] struct {
+}
+
+// NewServer create server
+func NewServer[T Number]() *Server[T] {
+	return &Server[T]{}
+}
+
+func (s *Server[T]) PrintKey(key T) {
+	fmt.Println(reflect.TypeOf(key))
+}
+
+func (s *Server[T]) GetKeys(key ...interface{}) []interface{} {
+	return []interface{}{}
 }

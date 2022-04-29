@@ -96,3 +96,8 @@ func TestSumNumberExt(t *testing.T) {
 		)
 	}
 }
+
+func TestServer_GetKey(t *testing.T) {
+	server := NewServer[string]()
+	server.PrintKey("123")
+}
