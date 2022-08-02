@@ -10,6 +10,11 @@ type A struct {
 
 type B struct {
 	Name string
+	c    *C
+}
+
+type C struct {
+	CName string
 }
 
 func (a *A) BadClone() *A {
@@ -25,18 +30,30 @@ func (a *A) Clone() *A {
 }
 
 func main() {
-	a := &A{b: &B{Name: "init"}}
+	a := &A{
+		b: &B{
+			Name: "init",
+			c:    &C{CName: "initc"},
+		},
+	}
+
 	fmt.Println(a.b.Name)
+	fmt.Println(a.b.c.CName)
 
 	// bad clone
 	na := a.BadClone()
 	na.b.Name = "new"
-	fmt.Println(na.b.Name) // new
-	fmt.Println(a.b.Name)  // new
+	na.b.c.CName = "newc"
+	fmt.Println(na.b.Name)   // new
+	fmt.Println(a.b.Name)    // new
+	fmt.Println(a.b.c.CName) // newc
 
 	// good clone
 	na2 := a.Clone()
 	na2.b.Name = "good"
+	na.b.c.CName = "goodc"
 	fmt.Println(na2.b.Name) // good
 	fmt.Println(a.b.Name)   // new
+	fmt.Println(a.b.c.CName)
+
 }
