@@ -10,6 +10,6 @@ func main() {
 	}
 
 	aa := &a{}
-	aa.names = append(aa.names, "test")
+	aa.names = append(aa.names, "test") // ok
 	fmt.Println(aa)
 }
