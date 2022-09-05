@@ -17,6 +17,18 @@ func main() {
 		panic(err)
 	}
 	fmt.Println(date)
+	date, err = DateToDate(time.RFC3339, "2006-01-02 15:04:05-07", "2022-06-07T16:12:17+08:00", 7)
+	if err != nil {
+		panic(err)
+	}
+	fmt.Println(date)
+
+	d, err := time.Parse("2006-01-02 15:04:05.999999-07", "2022-07-28 12:58:20.28+03")
+	if err != nil {
+		return
+	}
+	fmt.Println(d.Format(time.RFC3339Nano))
+	fmt.Println(d.Unix())
 }
 
 func DateToDate(fromLayout string, toLayout string, date string, toZone int) (string, error) {
