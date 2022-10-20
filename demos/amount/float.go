@@ -10,5 +10,10 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
-	fmt.Printf("%f", amount)
+	fmt.Printf("%f\n", amount)
+	amount, err = strconv.ParseFloat("16.123", 32)
+	if err != nil {
+		panic(err)
+	}
+	fmt.Printf("%f\n", amount)
 }
