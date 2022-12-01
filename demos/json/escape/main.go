@@ -17,7 +17,7 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
-	fmt.Println(string(raw))
+	fmt.Println("raw: ", string(raw))
 
 	// disable EscapeHTML
 	bts := bytes.NewBuffer(nil)
@@ -27,12 +27,12 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
-	fmt.Println(bts.String())
+	fmt.Println("escaped: ", bts.String())
 
 	// unmarshal
 	err = json.Unmarshal(bts.Bytes(), &aa)
 	if err != nil {
 		panic(err)
 	}
-	fmt.Println(aa)
+	fmt.Println("aa: ", aa)
 }
