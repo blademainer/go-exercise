@@ -49,7 +49,6 @@ func main() {
 		TLSConfig: &tls.Config{
 			ClientCAs:  pool,
 			ClientAuth: tls.RequireAndVerifyClientCert,
-
 		},
 	}
 	err = s.ListenAndServeTLS("demos/tls/key/server.crt", "demos/tls/key/server.key")

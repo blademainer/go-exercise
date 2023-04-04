@@ -23,4 +23,17 @@ func main() {
 	fmt.Println(na2)
 	fmt.Println(a2)
 
+	aa := []int{1, 2, 4, 5}
+	a3 := aa[:]
+	fmt.Println(append(a3, 1))
+	fmt.Println(a3)
+
+	// go copy
+	left := []int{1, 2, 3}
+	right := []int{4, 5, 6, 7}
+	all := make([]int, len(left)+len(right))
+	copy(all[:len(left)], left)
+	copy(all[len(left):], right)
+
+	fmt.Println(all)
 }
