@@ -10,4 +10,12 @@ func ReflectType(t interface{}) {
 	fmt.Println(of)
 	elem := of.Elem()
 	fmt.Println(elem)
+	fmt.Println(elem)
+}
+
+func NewT[T any]() *T {
+	tt := new(T) // good
+	// tt := T{} // bad
+	// tt := &T{} // bad
+	return tt
 }
