@@ -14,9 +14,9 @@ func Child(ctx context.Context) {
 	for {
 		select {
 		case t := <-tick:
-			fmt.Println("tick...", t.Format(time.RFC3339))
+			fmt.Println("child tick...", t.Format(time.RFC3339))
 		case <-ctx.Done():
-			fmt.Println("child done!!! but continue", ctx.Value(contextName), ctx.Err().Error())
+			fmt.Println("child done!!!", ctx.Value(contextName), ctx.Err().Error())
 			return
 		}
 
@@ -24,14 +24,16 @@ func Child(ctx context.Context) {
 }
 
 func Grandson(ctx context.Context) {
+	nc, cf := context.WithTimeout(ctx, 2*time.Second)
 	tick := time.Tick(1 * time.Second)
 	go func() {
+		defer cf()
 		for {
 			select {
 			case t := <-tick:
-				fmt.Println("tick...", t.Format(time.RFC3339))
-			case <-ctx.Done():
-				fmt.Println("Grandson done!!!", ctx.Value(contextName), ctx.Err().Error())
+				fmt.Println("grandson tick...", t.Format(time.RFC3339))
+			case <-nc.Done():
+				fmt.Println("Grandson done!!!", nc.Value(contextName), nc.Err().Error(), time.Now().Format(time.RFC3339))
 				return
 			}
 
@@ -40,13 +42,14 @@ func Grandson(ctx context.Context) {
 }
 
 func main() {
+	fmt.Println("start...", time.Now().Format(time.RFC3339))
 	kv := context.WithValue(context.TODO(), contextName, "todo")
-	c, cancelFunc := context.WithTimeout(kv, 3*time.Second)
+	c, cancelFunc := context.WithTimeout(kv, 5*time.Second)
 	defer cancelFunc()
 	Child(c)
 
-	kv2 := context.WithValue(context.Background(), contextName, "backgroud")
-	c2, cancelFunc2 := context.WithTimeout(kv2, 3*time.Second)
-	defer cancelFunc2()
-	Child(c2)
+	//kv2 := context.WithValue(context.Background(), contextName, "backgroud")
+	//c2, cancelFunc2 := context.WithTimeout(kv2, 3*time.Second)
+	//defer cancelFunc2()
+	//Child(c2)
 }
