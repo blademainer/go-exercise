@@ -20,6 +20,7 @@ require (
 	golang.org/x/tour v0.0.0-20180314180224-daf29d8a3774
 	google.golang.org/genproto v0.0.0-20190927181202-20e1ac93f88c
 	google.golang.org/grpc v1.26.0
+	google.golang.org/protobuf v1.26.0-rc.1
 	gopkg.in/yaml.v2 v2.3.0
 )
 
@@ -44,7 +45,6 @@ require (
 	golang.org/x/sys v0.0.0-20210603081109-ebe580a85c40 // indirect
 	golang.org/x/text v0.3.3 // indirect
 	google.golang.org/appengine v1.4.0 // indirect
-	google.golang.org/protobuf v1.26.0-rc.1 // indirect
 	gopkg.in/check.v1 v1.0.0-20201130134442-10cb98267c6c // indirect
 	gopkg.in/go-playground/validator.v8 v8.18.2 // indirect
 	gopkg.in/natefinch/lumberjack.v2 v2.0.0 // indirect
