@@ -14,6 +14,7 @@ type XMLProduct struct {
 	BargainPrice     string  `xml:"bargain_price"`
 	TotalReviewCount int     `xml:"total_review_count"`
 	AverageScore     float64 `xml:"average_score"`
+	Timeout2         xml.Attr
 	Timeout          struct {
 		After string `xml:"after,attr"`
 	} `xml:"timeout"`
@@ -44,6 +45,14 @@ func main() {
 		return
 	}
 	fmt.Println(string(out))
+
+	p := &XMLProduct{}
+	err = xml.Unmarshal(out, p)
+	if err != nil {
+		panic(err.Error())
+		return
+	}
+	fmt.Println(p)
 
 	// out = bytes.Replace(out, []byte("<![CDATA[>"), []byte("<![CDATA["), -1)
 	// out = bytes.Replace(out, []byte("</![CDATA[>"), []byte("]]>"), -1)
