@@ -21,6 +21,7 @@ func Sum() {
 	// cipherStr := h.Sum(nil)
 	cipherStr := md5.Sum([]byte(words))
 	fmt.Printf("%s\n", hex.EncodeToString(cipherStr[:]))
+
 }
 
 func main() {
