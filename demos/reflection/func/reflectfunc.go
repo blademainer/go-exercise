@@ -67,5 +67,10 @@ func main() {
 		fmt.Println("call length is not 2")
 		return
 	}
+	if call[0].IsNil() {
+		fmt.Println("call[0] is nil")
+		return
+	}
+	fmt.Println("rs: ", call[0].Interface())
 	//helloActionFunc(context.Background(), &HelloReq{Name: "world"})
 }
