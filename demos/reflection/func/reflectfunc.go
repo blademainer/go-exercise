@@ -41,36 +41,33 @@ func helloAction(ctx context.Context, req *HelloReq) (*HelloResp, error) {
 }
 
 // aopFunc is a function that takes a function and returns a new function
-func aopFunc(f any) reflect.Value {
-	v := reflect.ValueOf(f)
-	fv := reflect.MakeFunc(v.Type(), func(args []reflect.Value) []reflect.Value {
+func aopFunc(f any) {
+	oldDoValue := reflect.ValueOf(f).Elem()
+	//v := reflect.ValueOf(f)
+	// Copy is needed in order to prevent infinite recursion after function wrapping.
+	oldDoValueCopy := reflect.New(oldDoValue.Type()).Elem()
+	oldDoValueCopy.Set(oldDoValue)
+	fv := reflect.MakeFunc(oldDoValue.Type(), func(args []reflect.Value) []reflect.Value {
 		fmt.Println("before")
 		fmt.Printf("args: %v\n", args)
 		req := args[1].Interface().(*HelloReq)
 		req.Name = "fake" + req.Name
-		result := v.Call(args)
+		result := oldDoValueCopy.Call(args)
 		fmt.Println("after")
 		fmt.Printf("result: %v\n", result)
 		return result
 	})
-	return fv
+	oldDoValue.Set(fv)
 }
 
 func main() {
-	helloActionFunc := aopFunc(helloAction)
-	args := []reflect.Value{
-		reflect.ValueOf(context.Background()),
-		reflect.ValueOf(&HelloReq{Name: "world"}),
-	}
-	call := helloActionFunc.Call(args)
-	if len(call) != 2 {
-		fmt.Println("call length is not 2")
+	hf := helloAction
+	aopFunc(&hf)
+
+	resp, err := hf(context.Background(), &HelloReq{Name: "world"})
+	if err != nil {
+		panic(err)
 		return
 	}
-	if call[0].IsNil() {
-		fmt.Println("call[0] is nil")
-		return
-	}
-	fmt.Println("rs: ", call[0].Interface())
-	//helloActionFunc(context.Background(), &HelloReq{Name: "world"})
+	fmt.Printf("resp: %s\n", resp)
 }
