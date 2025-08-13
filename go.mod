@@ -40,6 +40,7 @@ require (
 	github.com/prometheus/common v0.26.0 // indirect
 	github.com/prometheus/procfs v0.6.0 // indirect
 	github.com/psilva261/timsort v0.0.0-20190627160904-7d0a5d71371e // indirect
+	github.com/shopspring/decimal v1.4.0 // indirect
 	github.com/sirupsen/logrus v1.6.0 // indirect
 	github.com/stretchr/testify v1.9.0 // indirect
 	github.com/ugorji/go v0.0.0-20180407103000-f3cacc17c85e // indirect
