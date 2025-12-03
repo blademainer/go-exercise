@@ -15,7 +15,7 @@ require (
 	github.com/weaveworks/procspy v0.0.0-20150706124340-cb970aa190c3
 	golang.org/x/crypto v0.23.0
 	golang.org/x/net v0.25.0
-	golang.org/x/sync v0.8.0
+	golang.org/x/sync v0.18.0
 	golang.org/x/tools v0.21.1-0.20240508182429-e35e4ccd0d2d
 	golang.org/x/tour v0.0.0-20180314180224-daf29d8a3774
 	google.golang.org/genproto v0.0.0-20190927181202-20e1ac93f88c
@@ -53,4 +53,6 @@ require (
 	gopkg.in/natefinch/lumberjack.v2 v2.0.0 // indirect
 )
 
-go 1.18
+go 1.24.0
+
+toolchain go1.24.6
